@@ -2,18 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AISurfaceProjectionService : MonoBehaviour
+public class AISurfaceProjectionService : GameService
 {
     public LayerMask DowncastLayerMask;
     public float Distance;
     public float Radius;
-
-    public static AISurfaceProjectionService Instance;
-
-    private void Start()
-    {
-        Instance = this;
-    }
 
     public Vector3 GetProjectedPosition( Vector3 OriginalPosition, float GroundOffset )
     {

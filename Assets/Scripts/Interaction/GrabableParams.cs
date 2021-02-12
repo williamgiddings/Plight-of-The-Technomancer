@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using static UnityEngine.XR.Interaction.Toolkit.XRBaseInteractable;
 
-[CreateAssetMenu( fileName = "New Grabable Data", menuName = "DataAsset/Grabable", order = 1 )]
+[CreateAssetMenu( fileName = "New Grabable Params", menuName = "DataAssets/Interaction/Grabable", order = 1 )]
 public class GrabableParams : ScriptableObject
 {
     public string AttachTransformName = "AttachPoint_01";

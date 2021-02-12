@@ -4,16 +4,27 @@ using UnityEngine;
 
 public class AIAgent : MonoBehaviour
 {
-    public float GroundOffset;
+    public AIUnitParams Params;
 
-    private void FixedUpdate()
+    protected Vector3 Destination;
+
+    private AISurfaceProjectionService SurfaceProjectionService;
+
+    protected virtual void Start()
     {
-        AISurfaceProjectionService Surface = AISurfaceProjectionService.Instance;
+        SurfaceProjectionService = GameState.GetGameService<AISurfaceProjectionService>();
+    }
 
-        if ( Surface )
+    protected void UpdatePosition()
+    {
+        if ( SurfaceProjectionService )
         {
-            transform.position = Surface.GetProjectedPosition( transform.position, GroundOffset );
+            transform.position = SurfaceProjectionService.GetProjectedPosition( transform.position, Params.GroundOffset );
         }
+    }
 
+    public void SetDestination( Vector3 InDestination )
+    {
+        Destination = InDestination;
     }
 }
