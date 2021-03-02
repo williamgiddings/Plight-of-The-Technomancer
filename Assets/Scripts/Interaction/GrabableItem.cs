@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class GrabableItem : MonoBehaviour
 {
@@ -49,7 +51,7 @@ public class GrabableItem : MonoBehaviour
             GrabInteractableComponent.throwSmoothingCurve = GrabableItemParams.ThrowSmoothingCurve;
             GrabInteractableComponent.throwVelocityScale = GrabableItemParams.ThrowVelocityScale;
             GrabInteractableComponent.throwAngularVelocityScale = GrabableItemParams.ThrowAngularVelocityScale;
-            GrabInteractableComponent.gravityOnDetach = GrabableItemParams.GravityOnDetach;
+            GrabInteractableComponent.forceGravityOnDetach = GrabableItemParams.GravityOnDetach;
             GrabInteractableComponent.attachEaseInTime = GrabableItemParams.AttachEaseInTime;
             GrabInteractableComponent.attachTransform = transform.Find( GrabableItemParams.AttachTransformName );
             
@@ -58,34 +60,28 @@ public class GrabableItem : MonoBehaviour
 
     void BindInteracts()
     {
-        GrabInteractableComponent.onSelectEntered.AddListener( OnSelectEntered );
-        GrabInteractableComponent.onSelectExited.AddListener( OnSelectExited );
-        GrabInteractableComponent.onSelectCanceled.AddListener( OnSelectCanceled );
-        GrabInteractableComponent.onActivate.AddListener( OnActivate );
-        GrabInteractableComponent.onDeactivate.AddListener( OnDeactivate );
+        GrabInteractableComponent.selectEntered.AddListener( OnSelectEntered );
+        GrabInteractableComponent.selectExited.AddListener( OnSelectExited );
+        GrabInteractableComponent.activated.AddListener( OnActivate );
+        GrabInteractableComponent.deactivated.AddListener( OnDeactivate );
     }
 
-    public virtual void OnSelectCanceled( XRBaseInteractor interactor )
-    {
-        Debug.Log( string.Format( "OnSelectCanceled {0}", gameObject.name ) );
-    }
-    
-    public virtual void OnSelectEntered( XRBaseInteractor interactor )
+    public virtual void OnSelectEntered( SelectEnterEventArgs interactor )
     {
         Debug.Log( string.Format( "OnSelectEntering {0}", gameObject.name ) );
     }
 
-    public virtual void OnSelectExited( XRBaseInteractor interactor )
+    public virtual void OnSelectExited( SelectExitEventArgs interactor )
     {
         Debug.Log( string.Format( "OnSelectExiting {0}", gameObject.name ) );
     }
 
-    public virtual void OnActivate( XRBaseInteractor Interactor )
+    public virtual void OnActivate( ActivateEventArgs Interactor )
     {
         Debug.Log( string.Format( "OnActivate {0}", gameObject.name ) );
     }
 
-    public virtual void OnDeactivate( XRBaseInteractor Interactor )
+    public virtual void OnDeactivate( DeactivateEventArgs Interactor )
     {
         Debug.Log( string.Format( "OnDeactivate {0}", gameObject.name) );
     }

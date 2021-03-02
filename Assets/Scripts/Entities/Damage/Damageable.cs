@@ -8,8 +8,9 @@ public class Damageable : MonoBehaviour
     [Header( "Asset" )]
     public DamageableParams HealthParams;
 
-    public delegate void HealthZeroDelegate( DamageSource Source );
-    public static event HealthZeroDelegate OnHealthZero;
+    public delegate void HealthNormalisedHealthChangeDelegate( float NewNormalisedHealth );
+    public event DelegateUtils.VoidDelegateNoArgs OnHealthZero;
+    public event HealthNormalisedHealthChangeDelegate OnNormalisedHealthChange;
 
     private float Health = 0;
 
@@ -49,8 +50,9 @@ public class Damageable : MonoBehaviour
             if ( Health <= 0 )
             {
                 Debug.Log( string.Format( "{0} was Destroyed by {1}'s {2}", gameObject.name, InDamage.GetDamageInstigator().name, InDamage.GetDamageType().ToString() ) );
-                OnHealthZero( InDamage );
+                OnHealthZero();
             }
+            OnNormalisedHealthChange( Health / HealthParams.MaxHealth );
         }
     }
 

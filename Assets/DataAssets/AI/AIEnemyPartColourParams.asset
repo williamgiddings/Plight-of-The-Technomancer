@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5a70506555433f44b977523ebdccc6a, type: 3}
+  m_Name: AIEnemyPartColourParams
+  m_EditorClassIdentifier: 
+  NumPartRecolours:
+    Entries:
+    - AccumulatedWeight: 0.5
+      Object: 2
+      Weight: 0.65
+    - AccumulatedWeight: 0.8
+      Object: 3
+      Weight: 0.25
+    - AccumulatedWeight: 1
+      Object: 4
+      Weight: 0.1
+  AvailableColours:
+  - Colour: {r: 0, g: 0.5377358, b: 0.5377358, a: 0}
+    ColourName: blue
+  - Colour: {r: 0.64705884, g: 0.16470589, b: 0.16470589, a: 0}
+    ColourName: red
+  - Colour: {r: 0.6886792, g: 0.44561598, b: 0, a: 0}
+    ColourName: orange
+  - Colour: {r: 0.5019608, g: 0, b: 0.5019608, a: 0}
+    ColourName: purple
+  - Colour: {r: 0.5019608, g: 0.5019608, b: 0, a: 0}
+    ColourName: green

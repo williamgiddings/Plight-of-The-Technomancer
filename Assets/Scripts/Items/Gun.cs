@@ -20,7 +20,7 @@ public class Gun : GrabableItem
         }
     }
 
-    public override void OnActivate( XRBaseInteractor Interactor )
+    public override void OnActivate( ActivateEventArgs Interactor )
     {
         Shoot();
     }

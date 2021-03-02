@@ -1,39 +1,4 @@
 ﻿/// Original Code written and designed by Aeden C Graves.
-///
-///
-///CHANGE LOG:
-///
-/// DATE || msg: "" || Author Signature: SNG || version VERSION
-///
-/// 05/12/19 || msg: "Fixed non dymanic footsteping. Remade crouching system to be more efficiant and added an input over ride. || Author Signature: Aedan Graves || version 19.3.22 cl >> 19.5.12feu
-/// 03/22/19 || msg: "Cleaned up code" || Author Signature: Aedan Graves || version 19.3.19cu >> 19.3.22cl
-/// 03/19/19 || msg: "Added a rudimentary slope detection system." || Author Signature: Aedan Graves || version 19.3.18a >> 19.3.19cu
-/// 03/18/19 || msg: "Fixed Stamina" || Author Signature: Aedan Graves || version 19.3.11p >> 19.3.18a
-/// 03/02/19 || msg: "Improved camera System" || Author Signature: Aecan Graves || version 19.3.2 >> 19.3.11p
-/// 03/02/19 || msg: "Lowered maximum walk, sprint, and jump values" || Author Signature: Aedan Graves || version: 19.2.21 >> 19.3.2
-/// 02/21/19 || msg: "Removed dynamic speed curve. Modified headbob logic || Author Signature: Aedan C Graves || version: 19.2.15 >> 19.2.21
-/// 02/15/19 || msg: "Added Camera shake. Made it possable to disable camera movement when jumping and landing." || Author Signature: Aedan C Graves || version: 19.2.12 >> 19.2.15
-/// 02/12/19 || msg: "Seperated Dynamic Footsteps from the Headbob calculations." || Author Signature: Aedan C Graves || version: 1.6b >> 19.2.12
-/// 02/08/19 || msg "Added some more tooltips." || Author Signature: Aedan C Graves || version 1.6a >> 1.6b
-/// 02/04/19 || msg "Changed crouch funtion to use an In Editor defined input axis" || Author Signature: Aedan C Graves || version 1.6 >> 1.6a
-/// 12/13/18 || msg: "Added 'Custom' entry for Dynamic footstep system" || Author Signature: Aedan C Graves || version 1.5b >> 1.6
-/// 12/11/18 || msg: "Added Volume control to Footstep and Jump/land SFX." || Author Signature: Aedan C Graves || version 1.5a >> 1.5b
-/// 02/18/18 || msg: "Updated mouse rotation to allow pre-play rotiation." || Author Signature: Aedan C Graves || version 1.5 >> 1.5a
-/// 01/31/18 || msg: "Changed Dynamic footstep system to use physics materials." || Author Signature: Aedan C Graves || version 1.4c >> 1.5
-/// 12/19/17 || msg: "Added headbob passthrough variables" || Auther Signature: Aeden C Graves || version 1.4b >> 1.4c
-/// 12/02/17 || msg: "Made camera movement toggleable" || Auther Signature: Aeden C Graves || version 1.4a >> 1.4b
-/// 10/16/17 || msg: "Made all sounds optional." || Author Signature: Aedan C Graves || version 1.4 >> 1.4a
-/// 10/09/17 || msg: "Added Optional FOV Kick" || Author Signature: Aedan C Graves || version 1.3b >> 1.4
-/// 10/08/17 || msg: "Improved Dynamic Footsteps." || Author Signature: Aedan C Graves || version 1.3a >> 1.3b
-/// 10/07/17 || msg: "BetaTesting Class" || Author Signature: Aedan C Graves || version 1.3 >> 1.3a
-/// 10/07/17 || msg: "Added Optional Dynamic Footsteps. Added optional Dynamic Speed Curve." || Author Signature: Aedan C Graves || version 1.2 >> 1.3
-/// 10/03/17 || msg: "Added optional Crouch." || Author Signature: Aedan C Graves || version v1.1 >> v1.2
-/// 09/26/17 || msg: "Fixed Headbobbing in mid air. Added a option for head bobbing, Added optional Stamina. Added Auto Crosshair Feature." || Author Signature: Aedan C Graves|| version v1.0 >> v1.1
-/// 09/21/17 || msg: "Finished SMB FPS Logic." || Author Signature: Aedan C Graves || version v0.0 >> v1.0
-///
-/// 
-/// 
-/// Made changes that you think should come "Out of the box"? E-mail the modified Script with A new entry on the top of the Change log to: modifiedassets@aedangraves.info
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -135,6 +100,8 @@ public class FirstPersonAIO : MonoBehaviour {
         [Space(10)]
         [Tooltip("Currently buggy; Determines if the slope detection/limiting system should be used.")]public bool useSlopeDetection = true;
         [Range(0,89)] public float maxSlopeAngle=70;
+        [Space(10)]
+        public LayerMask GroundCheckLayerMask;
         [HideInInspector] public bool tooSteep;
         [HideInInspector] public RaycastHit surfaceAngleCheck;
     }
@@ -366,14 +333,9 @@ public class BETA_SETTINGS{
         speed = walkByDefault ? isCrouching ? walkSpeedInternal : (isSprinting ? inrSprintSpeed : walkSpeedInternal) : (isSprinting ? walkSpeedInternal : inrSprintSpeed);
         Ray ray = new Ray(transform.position, -transform.up);
         if(IsGrounded || fps_Rigidbody.velocity.y < 0.1) {
-            RaycastHit[] hits = Physics.RaycastAll(ray, capsule.height * jumpRayLength);
-            float nearest = float.PositiveInfinity;
-            IsGrounded = false;
-            for(int i = 0; i < hits.Length; i++) {
-                if(!hits[i].collider.isTrigger && hits[i].distance < nearest) {
-                    IsGrounded = true;
-                    nearest = hits[i].distance;
-                }
+            if (Physics.Raycast(ray, out RaycastHit Hit, capsule.height * jumpRayLength, advanced.GroundCheckLayerMask) )
+            {
+                IsGrounded = true;
             }
         }
   

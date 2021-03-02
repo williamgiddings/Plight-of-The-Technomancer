@@ -6,12 +6,12 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class ToolItem : GrabableItem
 {
 
-    public override void OnSelectExited( XRBaseInteractor interactor )
+    public override void OnSelectExited( SelectExitEventArgs interactor )
     {
         
     }
 
-    public override void OnSelectEntered( XRBaseInteractor interactor )
+    public override void OnSelectEntered( SelectEnterEventArgs interactor )
     {
 
     }

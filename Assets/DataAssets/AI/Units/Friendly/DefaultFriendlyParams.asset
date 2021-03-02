@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63cdc5be6c62ab74caa0ab66b2cfbdf5, type: 3}
+  m_Name: DefaultFriendlyParams
+  m_EditorClassIdentifier: 
+  DefaultObject: {fileID: 4605201394845627059, guid: 8b5446342c87a6549abe99552beb6e86, type: 3}
+  MaxHealth:
+    Binding: 0
+    Value: 100
+  HeatResistance:
+    Binding: 1
+    Value: 0
+  KineticResistance:
+    Binding: 3
+    Value: 0
+  EnergyResistance:
+    Binding: 2
+    Value: 0
+  BlastResistance:
+    Binding: 4
+    Value: 0
+  DeployTime:
+    Binding: 5
+    Value: 3
+  FireRate:
+    Binding: 6
+    Value: 3
+  TargettingTime:
+    Binding: 7
+    Value: 2

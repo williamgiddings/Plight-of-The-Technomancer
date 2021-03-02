@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1289cac787a34d64fac09673167a3ca6, type: 3}
   m_Name: GruntAIUnitParams
   m_EditorClassIdentifier: 
-  MoveSpeed: 10
-  GroundOffset: 0.5
+  MoveSpeed: 5

@@ -6,7 +6,7 @@ public class GameService : MonoBehaviour
 {
     private GameService GameServiceInstance;
 
-    private void Start()
+    public virtual void InitialiseGameService()
     {
         if ( GameServiceInstance )
         {

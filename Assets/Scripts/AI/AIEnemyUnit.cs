@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class AIEnemyUnit : AIAgent
 {
-    private AIWave AssociatedWave;
-    private Damageable DamageableComponent;
+    public AIUnitParams Params;
 
-    protected override void Start()
-    {
-        base.Start();
-        DamageableComponent = GetComponent<Damageable>();
-        Damageable.OnHealthZero += Damageable_OnHealthZero;
-    }
+    private AIWave AssociatedWave;
 
     public void Init()
     {

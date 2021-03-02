@@ -10,10 +10,12 @@ public class TeleportControl : MonoBehaviour
     public XRUtils.ButtonOption TeleportButton;
 
     private XRRayInteractor Iteractor;
+    private string TeleportButtonString;
 
     private void Start()
     {
         Iteractor = GetComponent<XRRayInteractor>();
+        TeleportButtonString = TeleportButton.ToString();
     }
 
     void Update()
@@ -25,7 +27,7 @@ public class TeleportControl : MonoBehaviour
 
             foreach( XRController Device in Controllers ) 
             {
-                if ( XRUtils.Buttons.TryGetValue( TeleportButton.ToString(), out ButtonDown ) && Device.enableInputActions )
+                if ( XRUtils.Buttons.TryGetValue( TeleportButtonString, out ButtonDown ) && Device.enableInputActions )
                 {
                     if ( Device.inputDevice.TryGetFeatureValue( ButtonDown, out ButtonState ) )
                     {

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc72beef9311e0d4492b3d09d76fa28d, type: 3}
+  m_Name: VAT_Enemy_Attack_Head
+  m_EditorClassIdentifier: 
+  PositionMap: {fileID: 2800000, guid: 05f6d4f525695b34d80f4694376592a6, type: 3}
+  NormalMap: {fileID: 2800000, guid: 671286104333ca54b872ca846601da40, type: 3}
+  DefaultSpeed: 1.2
+  StartFrame: 0
+  NumberOfFrames: 73
+  PositionMin: -1.5775775
+  PositionMax: 3.813756

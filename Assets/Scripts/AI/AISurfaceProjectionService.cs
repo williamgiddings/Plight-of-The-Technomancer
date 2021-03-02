@@ -19,4 +19,13 @@ public class AISurfaceProjectionService : GameService
         }
         return OriginalPosition;
     }
+
+    public float GetGlobalDownCastDepth( Vector2 GlobalXZ )
+    {
+        if ( Physics.Raycast( new Vector3( GlobalXZ.x, 50.0f, GlobalXZ.y ), Vector3.down, out RaycastHit Hit, DowncastLayerMask ) )
+        {
+            return Hit.point.y;
+        }
+        return 0.0f;
+    }
 }
