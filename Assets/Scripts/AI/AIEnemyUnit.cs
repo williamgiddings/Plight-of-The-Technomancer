@@ -6,10 +6,12 @@ public class AIEnemyUnit : AIAgent
 {
     public AIUnitParams Params;
 
+    private EnemyVATAnimator Animator;
     private AIWave AssociatedWave;
 
     public void Init()
     {
+        Animator = GetComponent<EnemyVATAnimator>();
         StartCoroutine( HeadToShootingPosition() );
     }
 
@@ -31,12 +33,17 @@ public class AIEnemyUnit : AIAgent
 
     private IEnumerator HeadToShootingPosition()
     {
-        while ( Vector3.Distance( transform.position, Destination ) >= 1.0f )
+        Animator.SetState( EnemyVATAnimator.EnemyAnimState.Walking );
+        while ( Vector3.Distance( new Vector3( transform.position.x, 0.0f, transform.position.z ), Destination ) > 1.0f )
         {
-            transform.LookAt( Destination, Vector3.up );
+            Vector3 LookPos = Destination - transform.position;
+            LookPos.y = 0;
+            Quaternion NewRotation = Quaternion.LookRotation(LookPos);
+            transform.rotation = NewRotation;
             transform.Translate( Vector3.forward * Params.MoveSpeed * Time.deltaTime );
             UpdatePosition();
             yield return new WaitForEndOfFrame();
         }
+        Animator.SetState( EnemyVATAnimator.EnemyAnimState.Idle );
     }
 }

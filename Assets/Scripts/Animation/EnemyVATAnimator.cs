@@ -110,11 +110,4 @@ public class EnemyVATAnimator : MonoBehaviour
         Instance.SetFloat( "_numOfFrames", Anim.NumberOfFrames );
         Instance.SetFloat( "_frameStart", Anim.StartFrame );
     }
-
-    void Update()
-    {
-        if ( Input.GetKeyDown( KeyCode.F10 ) ) SetState( EnemyAnimState.Idle );
-        if ( Input.GetKeyDown(KeyCode.F11) ) SetState( EnemyAnimState.Walking );
-        if ( Input.GetKeyDown(KeyCode.F12) ) SetState( EnemyAnimState.Attacking );
-    }
 }

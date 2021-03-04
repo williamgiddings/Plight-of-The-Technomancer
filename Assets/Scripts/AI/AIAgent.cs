@@ -25,7 +25,8 @@ public class AIAgent : MonoBehaviour
     {
         if ( SurfaceProjectionService )
         {
-            transform.position = SurfaceProjectionService.GetProjectedPosition( transform.position, 1.0f );
+            Vector3 SurfaceNormal;
+            transform.position = SurfaceProjectionService.GetProjectedPosition( transform.position, -1.0f, out SurfaceNormal );
         }
     }
 
