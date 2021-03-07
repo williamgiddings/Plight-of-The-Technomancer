@@ -5,23 +5,37 @@ using UnityEngine;
 [System.Serializable]
 public class AIFriendlyUnitData
 {
-    public string       UnitName;
+    public string   UnitName;
     
-    public float  MaxHealth;
-    public float  HeatResistance;
-    public float  KineticResistance;
-    public float  EnergyResistance;
-    public float  BlastResistance;
+    public float    MaxHealth;
+    public float    HeatResistance;
+    public float    KineticResistance;
+    public float    EnergyResistance;
+    public float    BlastResistance;
 
-    public float  DeployTime;
-    public float  FireRate;
-    public float  TargettingTime;
+    public float    DeployTime;
+    public float    FireRate;
+    public float    TargettingTime;
 
     public System.Guid GUID { get; }
 
     public AIFriendlyUnitData() : this(null)
     {
 
+    }
+
+    public List<StatTypes.Stat> GetPositiveStats()
+    {
+        List < StatTypes.Stat > PositiveStats = new List<StatTypes.Stat>();
+        
+        foreach ( StatTypes.Stat Stat in StatTypes.StatCollection )
+        {
+            if ( GetStatBinding( Stat ) > 0.0f )
+            {
+                PositiveStats.Add( Stat );
+            }
+        }
+        return PositiveStats;
     }
 
     public AIFriendlyUnitData( AIFriendUnitParams Defaults )

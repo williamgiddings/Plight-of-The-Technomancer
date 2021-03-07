@@ -11,7 +11,6 @@ public class Binoculars : MonoBehaviour
     public float MinimumFOV = 15f;
     public float MaxPostProcessValue;
     public float ZoomSpeed;
-    public float EffectSpeed;
     public GameObject BinocularUI;
     
     private Camera Cam;
@@ -51,24 +50,23 @@ public class Binoculars : MonoBehaviour
 
     void EnterBinoculars()
     {
-        Cam.DOFieldOfView( MinimumFOV, ZoomSpeed );
-        DOTween.To( this.BlendPostProcesses, CurrentBlendValue, 1.0f, EffectSpeed );
+        DOTween.To( this.BlendZoomValues, CurrentBlendValue, 1.0f, ZoomSpeed );
         BinocularUI.SetActive( true );
     }
 
     void ExitBinoculars()
     {
-        Cam.DOFieldOfView( MaximumFOV, ZoomSpeed );
-        DOTween.To( this.BlendPostProcesses, CurrentBlendValue, 0.0f, EffectSpeed );
+        DOTween.To( this.BlendZoomValues, CurrentBlendValue, 0.0f, ZoomSpeed );
         BinocularUI.SetActive( false );
     }
 
-    void BlendPostProcesses( float Value )
+    void BlendZoomValues( float Value )
     {
         CurrentBlendValue = Value;
         float NewValue = MaxPostProcessValue * Value;
 
         LD.intensity.Override( NewValue );
         V.intensity.Override( NewValue );
+        Cam.fieldOfView = MaximumFOV - ( ( MaximumFOV - MinimumFOV ) * Value);
     }
 }

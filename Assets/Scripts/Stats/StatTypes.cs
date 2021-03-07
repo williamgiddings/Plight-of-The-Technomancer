@@ -15,4 +15,16 @@ public static class StatTypes
         STAT_FireRate,
         STAT_TargettingTime
     }
+
+    public static readonly Stat[] StatCollection = new Stat[]
+        {
+            Stat.STAT_Health,
+            Stat.STAT_HeatResistance,
+            Stat.STAT_EnergyResistance,
+            Stat.STAT_KineticResistance,
+            Stat.STAT_BlastResistance,
+            Stat.STAT_DeployTime,
+            Stat.STAT_FireRate,
+            Stat.STAT_TargettingTime
+        };
 }

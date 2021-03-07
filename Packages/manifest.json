@@ -1,4 +1,13 @@
 {
+  "scopedRegistries": [
+    {
+      "name": "Keijiro",
+      "url": "https://registry.npmjs.com",
+      "scopes": [
+        "jp.keijiro"
+      ]
+    }
+  ],
   "dependencies": {
     "com.sidefx.vat": "file:C:/Program Files/Side Effects Software/Houdini 18.0.695/packages/SideFXLabs18.0/unity/shaders/URP",
     "com.unity.collab-proxy": "1.3.9",

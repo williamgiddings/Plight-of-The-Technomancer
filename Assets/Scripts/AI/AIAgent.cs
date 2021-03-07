@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIAgent : MonoBehaviour
+public class AIAgent : Entity
 {
     protected Vector3 Destination;
     protected Damageable DamageableComponent;

@@ -15,3 +15,13 @@ MonoBehaviour:
   FriendlyUnitDefaults: {fileID: 11400000, guid: 72e555a498be75e4ab2a36524c49ed30, type: 2}
   MinStatScaler: 0
   MaxStatScaler: 1
+  StatIcons:
+    Definitions:
+    - Stat: 1
+      StatIcon: {fileID: 21300000, guid: c2725a132280cd149a207d2997a6b447, type: 3}
+    - Stat: 2
+      StatIcon: {fileID: 21300000, guid: 704571b0989d521478bb78dfc6a42d54, type: 3}
+    - Stat: 3
+      StatIcon: {fileID: 21300000, guid: 220eafab26cb9304085badd108976dbc, type: 3}
+    - Stat: 4
+      StatIcon: {fileID: 21300000, guid: 7b3395fd46f372641baf3767cdf3494b, type: 3}

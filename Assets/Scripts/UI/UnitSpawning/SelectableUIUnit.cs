@@ -32,6 +32,7 @@ public class SelectableUIUnit : MonoBehaviour
     [Header("Stat Containers")]
     public StatGroup[] StatContainers;
     public TextMeshProUGUI UnitName;
+    public StatOverviewContainer StatOverview;
 
     protected AIFriendlyUnitData UnitData;
     
@@ -48,6 +49,15 @@ public class SelectableUIUnit : MonoBehaviour
             float RawStatValue = UnitData.GetStatBinding( Stat.Binding );
             Stat.SetValue( GetNormalizedStatValue( RawStatValue ) );
         }
+        if ( StatOverview != null )
+        {
+            StatOverview.Reset();
+            foreach ( StatTypes.Stat PositiveStat in UnitData.GetPositiveStats() )
+            {
+                StatOverview.AddStat( PositiveStat );
+            }
+        }
+
         UnitName.SetText(UnitData.UnitName);
     }
 
