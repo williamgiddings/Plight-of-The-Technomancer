@@ -1,120 +1,7 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[System.Serializable]
-public class AIFriendlyUnitData
-{
-    public string   UnitName;
-    
-    public float    MaxHealth;
-    public float    HeatResistance;
-    public float    KineticResistance;
-    public float    EnergyResistance;
-    public float    BlastResistance;
-
-    public float    DeployTime;
-    public float    FireRate;
-    public float    TargettingTime;
-
-    public System.Guid GUID { get; }
-
-    public AIFriendlyUnitData() : this(null)
-    {
-
-    }
-
-    public List<StatTypes.Stat> GetPositiveStats()
-    {
-        List < StatTypes.Stat > PositiveStats = new List<StatTypes.Stat>();
-        
-        foreach ( StatTypes.Stat Stat in StatTypes.StatCollection )
-        {
-            if ( GetStatBinding( Stat ) > 0.0f )
-            {
-                PositiveStats.Add( Stat );
-            }
-        }
-        return PositiveStats;
-    }
-
-    public AIFriendlyUnitData( AIFriendUnitParams Defaults )
-    {
-        UnitName = "NoName";
-        
-        if ( Defaults )
-        {
-            MaxHealth = Defaults.MaxHealth;
-            DeployTime = Defaults.DeployTime;
-            FireRate = Defaults.FireRate;
-            TargettingTime = Defaults.TargettingTime;
-        }
-
-        GUID = System.Guid.NewGuid();
-    }
-
-    public override bool Equals( object InObject )
-    {
-        return this == InObject as AIFriendlyUnitData;
-    }
-
-    public static bool operator==( AIFriendlyUnitData ThisObject, AIFriendlyUnitData Other  )
-    {
-        if ( object.ReferenceEquals( null, ThisObject ) && object.ReferenceEquals( null, Other ) )
-        {
-            return true;
-        }
-        else if ( object.ReferenceEquals( null, ThisObject ) || object.ReferenceEquals( null, Other ) )
-        {
-            return false;
-        }
-        return ThisObject.GUID == Other.GUID;
-    }
-
-    public static bool operator!=( AIFriendlyUnitData ThisObject, AIFriendlyUnitData Other )
-    {
-        return !( ThisObject == Other);
-    }
-
-    public void Combine( AIFriendlyUnitData OtherObject)
-    {
-        HeatResistance = OtherObject.HeatResistance;
-        KineticResistance = OtherObject.KineticResistance;
-        EnergyResistance = OtherObject.EnergyResistance;
-        BlastResistance = OtherObject.BlastResistance;
-
-        MaxHealth *= OtherObject.MaxHealth;
-        DeployTime *= OtherObject.DeployTime;
-        FireRate *= OtherObject.FireRate;
-        TargettingTime *= OtherObject.TargettingTime;
-    }
-
-    public float GetStatBinding( StatTypes.Stat Stat )
-    {
-        switch ( Stat )
-        {
-            case StatTypes.Stat.STAT_Health:
-                return MaxHealth;
-            case StatTypes.Stat.STAT_HeatResistance:
-                return HeatResistance;
-            case StatTypes.Stat.STAT_EnergyResistance:
-                return EnergyResistance;
-            case StatTypes.Stat.STAT_KineticResistance:
-                return KineticResistance;
-            case StatTypes.Stat.STAT_BlastResistance:
-                return BlastResistance;
-            case StatTypes.Stat.STAT_DeployTime:
-                return DeployTime;
-            case StatTypes.Stat.STAT_FireRate:
-                return FireRate;
-            case StatTypes.Stat.STAT_TargettingTime:
-                return TargettingTime;
-            default:
-                return 0.0f;
-
-        }  
-    }
-}
 
 public class AIFriendlyUnit : AIAgent
 {
@@ -123,12 +10,21 @@ public class AIFriendlyUnit : AIAgent
     public static event AIDelegates.FriendlyUnitDelegate onFriendlyUnitDestroyed;
     public static event AIDelegates.FriendlyUnitDelegate onFriendlyUnitSpawned;
 
-    private Optional<AIFriendlyUnitData> UnitData;
+    [Header("Aiming Visual")]
+    public Transform TurretBase;
+    public Transform TurretGun;
+    public MeshRenderer AimingLights;
+    public float MinAimPitch;
+    public float MaxAimPitch;
 
-    protected override void Start()
+    private Optional<AIFriendlyUnitData> UnitData;
+    private Entity CacheEntityTarget;
+
+    public override void Start()
     {
         base.Start();
         onFriendlyUnitSpawned( this );
+        PerceptionComponent.SetHeadTransform( TurretGun.transform );
     }
 
     public AIFriendlyUnitData GetUnitData()
@@ -139,6 +35,23 @@ public class AIFriendlyUnit : AIAgent
         }
         Debug.Log("Unit Data Not Set!");
         return null;
+    }
+
+    protected override void OnPerceptionTargetAquired( Entity InEntity )
+    {
+        CacheEntityTarget = InEntity;
+        AimingLights.material.SetColor( "_EmissionColor", Color.red*4.0f);
+        LookAtTarget();
+    }
+
+    protected override void OnPerceptionTargetLost()
+    {
+        CacheEntityTarget = null;
+        LookingAtTarget = false;
+        AimingLights.material.SetColor( "_EmissionColor", Color.blue * 4.0f );
+
+        TurretBase.DORotate( Vector3.zero, PerceptionComponent.PerceptionParams.TargetingTime );
+        TurretGun.DOLocalRotate( Vector3.zero, PerceptionComponent.PerceptionParams.TargetingTime );
     }
 
     public void SetUnitData( AIFriendlyUnitData Modifier )
@@ -157,6 +70,49 @@ public class AIFriendlyUnit : AIAgent
     protected override void OnDie()
     {
         onFriendlyUnitDestroyed( this );
+    }
+
+    protected override void LookAtTarget()
+    {
+        LookingAtTarget = false;
+
+        Quaternion NewBaseRotation = GetTurretRotation();
+        Quaternion NewTurretAngle = GetGunRotation();
+
+        Sequence LookAtSequence = DOTween.Sequence();
+        LookAtSequence.Append( TurretBase.DORotate( NewBaseRotation.eulerAngles, PerceptionComponent.PerceptionParams.TargetingTime ) );
+        LookAtSequence.Append( TurretGun.DOLocalRotate( NewTurretAngle.eulerAngles, PerceptionComponent.PerceptionParams.TargetingTime ) );
+        LookAtSequence.onComplete += delegate () { LookingAtTarget = true; };
+    }
+
+    Quaternion GetTurretRotation()
+    {
+        Vector3 TurretLookPos = CacheEntityTarget.transform.position - TurretBase.transform.position;
+        Quaternion NewBaseRotation = Quaternion.LookRotation(new Vector3(TurretLookPos.x, 0.0f, TurretLookPos.z ) );
+
+        return NewBaseRotation;
+    }
+
+    Quaternion GetGunRotation()
+    {
+        Vector3 GunLookPos = (CacheEntityTarget.transform.position+CacheEntityTarget.GetCenterMass()) - TurretGun.transform.position;
+
+        float NewAnglePitch = -GunLookPos.y;
+        NewAnglePitch = Mathf.Clamp( NewAnglePitch, MinAimPitch, MaxAimPitch );
+        Quaternion NewTurretAngle = Quaternion.Euler( NewAnglePitch, 0.0f, 0.0f );
+        return NewTurretAngle;
+    }
+
+    private void FixedUpdate()
+    {
+        if ( CacheEntityTarget && LookingAtTarget )
+        {
+            Quaternion NewBaseRotation = GetTurretRotation();
+            Quaternion NewTurretAngle = GetGunRotation();
+
+            TurretBase.rotation = NewBaseRotation;
+            TurretGun.localRotation = NewTurretAngle;
+        }
     }
 
 }

@@ -2,28 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum DamageTypes
-{
-    Explosion,
-    Crushed,
-    Shot,
-    Unknown
-}
-
 public struct DamageSource
 {
-    public DamageSource( DamageTypes InType, GameObject InInstigator, float InAmount)
+    public DamageSource( AIEnemyUnitTypes InType, GameObject InInstigator, float InAmount)
     {
         DamageType = InType;
         DamageInstigator = InInstigator;
         DamageAmount = InAmount;
     }
 
-    DamageTypes DamageType;
+    AIEnemyUnitTypes DamageType;
     GameObject DamageInstigator;
     float DamageAmount;
 
-    public DamageTypes GetDamageType()
+    public AIEnemyUnitTypes GetDamageType()
     {
         return DamageType;
     }

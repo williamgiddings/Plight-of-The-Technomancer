@@ -5,15 +5,55 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
+#if UNITY_EDITOR
+public struct DebugPercievedEntityCache
+{
+    public Entity Ent;
+    public DebugScoreCache Scores;
+    public float TotalScore;
+
+    public struct DebugScoreCache
+    {
+        public float DistanceScore;
+        public float AngleScore;
+
+
+        public DebugScoreCache( float InDistanceScore, float InAngleScore )
+        {
+            DistanceScore = InDistanceScore;
+            AngleScore = InAngleScore;
+        }
+    }
+
+
+    public DebugPercievedEntityCache( Entity InEnt, float InScore, DebugScoreCache ScoreBreakDown )
+    {
+        Ent = InEnt;
+        Scores = ScoreBreakDown;
+        TotalScore = InScore;
+    }
+}
+#endif
+
 public class AIPerceptionComponent : MonoBehaviour
 {
     [Header("Agent Params")]
     public AIPerceptionParams PerceptionParams;
 
+    //Events
+    public DelegateUtils.VoidDelegateEntityArg onTargetAquired;
+    public DelegateUtils.VoidDelegateNoArgs onTargetLost;
+
+
     private Entity ThisEntity;
     private Entity CurrentTarget;
     private float CurrentTargetScore;
     private AIPerceptionService CachedAIPerceptionService;
+    private Optional<Transform> OverrideHeadRelativeTransform;
+
+#if UNITY_EDITOR
+    private List<DebugPercievedEntityCache> DebugPercievedEntities =  new List<DebugPercievedEntityCache>();
+#endif
 
     private void Start()
     {
@@ -26,6 +66,11 @@ public class AIPerceptionComponent : MonoBehaviour
         }    
     }
 
+    public void SetHeadTransform( Transform NewHead )
+    {
+        OverrideHeadRelativeTransform = NewHead;
+    }
+
     private void OnDestroy()
     {
         if ( CachedAIPerceptionService )
@@ -36,11 +81,20 @@ public class AIPerceptionComponent : MonoBehaviour
 
     protected void SetNewTarget( Entity Target )
     {
-        CurrentTarget = Target;
         if ( Target != null )
         {
             Target.Target();
+            if ( CurrentTarget )
+            {
+                CurrentTarget.UnTarget();
+            }
+            onTargetAquired( Target );
         }
+        else if ( Target != CurrentTarget )
+        {
+            onTargetLost();
+        }
+        CurrentTarget = Target;
     }
 
 #if UNITY_EDITOR
@@ -52,10 +106,30 @@ public class AIPerceptionComponent : MonoBehaviour
         Handles.Label( EyePosition, string.Format( "Target: {0}", CurrentTarget ) );
         Gizmos.color = GizmoColor;
         Gizmos.DrawLine( EyePosition, CurrentTarget ? CurrentTarget.transform.position : transform.forward * PerceptionParams.MaxTargetingRange );
+
+        foreach( DebugPercievedEntityCache CachedEnt in DebugPercievedEntities )
+        {
+            if ( CachedEnt.Ent )
+            {
+                Vector3 EntityPos = CachedEnt.Ent.gameObject.transform.position + CachedEnt.Ent.GetCenterMass();
+                GizmoColor = Color.magenta;
+                Handles.color = GizmoColor;
+                Handles.Label( EntityPos,
+                    string.Format( "Total Score: {0}\nDistanceScore: {1}(x{2})\nAngleScore: {3}(x{4})",
+                    CachedEnt.TotalScore,
+                    CachedEnt.Scores.DistanceScore,
+                    PerceptionParams.DistanceScoreWeighting,
+                    CachedEnt.Scores.AngleScore,
+                    PerceptionParams.AngleScoreWeighting
+                    ) );
+                Gizmos.color = GizmoColor;
+                Gizmos.DrawLine( EyePosition, EntityPos );
+            }
+        }
     }
 #endif
 
-    protected Entity GetCurrentTarget()
+    public Entity GetCurrentTarget()
     {
         return CurrentTarget;
     }
@@ -67,6 +141,10 @@ public class AIPerceptionComponent : MonoBehaviour
 
     public virtual void AquireNewTarget()
     {
+        #if UNITY_EDITOR
+        DebugPercievedEntities.Clear();
+        #endif
+
         List<Entity> HostileUnits = CachedAIPerceptionService.GetHostileUnitsForFaction(ThisEntity.AllignedFaction);
 
         Entity BestTarget = null;
@@ -74,23 +152,30 @@ public class AIPerceptionComponent : MonoBehaviour
 
         foreach ( Entity Ent in HostileUnits )
         {
+            if ( !Ent ) continue;
             float UnitTargetScore = 0.0f;
 
             Vector3 EyePosition = transform.position + ( Vector3.up * PerceptionParams.EyeHeight );
-            Vector3 UnitLocation = Ent.transform.position;
-            Vector3 DirectionTo = (UnitLocation- EyePosition).normalized;
+            Vector3 UnitLocation = Ent.transform.position + Ent.GetCenterMass();
+            Vector3 DirectionTo = (UnitLocation - EyePosition).normalized;
+
+            Vector3 LookDirection = OverrideHeadRelativeTransform ? OverrideHeadRelativeTransform.Get().forward : transform.forward;
+
             float DistanceTo = Vector3.Distance( UnitLocation, transform.position );
-            float AngleInFront = Mathf.Abs( Vector3.Angle( transform.forward, DirectionTo ) );
+            float AngleInFront = Mathf.Abs( Vector3.Angle( LookDirection, DirectionTo ) );
 
             RaycastHit HitInfo;
             Physics.Raycast( EyePosition, DirectionTo, out HitInfo, PerceptionParams.MaxTargetingRange, PerceptionParams.TargetingPerceptionLayers );
 
-            bool CanSee = ReferenceEquals( HitInfo.transform, Ent.transform);
+            bool CanSee = HitInfo.transform && ReferenceEquals( HitInfo.transform.gameObject, Ent.gameObject);
             bool InRange = DistanceTo < PerceptionParams.MaxTargetingRange;
             bool InSight = AngleInFront < PerceptionParams.MaxTargetingAngle && CanSee;
 
-            UnitTargetScore += 1.0f - ( DistanceTo / PerceptionParams.MaxTargetingRange ); // Distance score
-            UnitTargetScore += 1.0f - ( AngleInFront / PerceptionParams.MaxTargetingAngle ); // Angle score
+            float DistanceScore = ( 1.0f - ( DistanceTo / PerceptionParams.MaxTargetingRange ) ) * PerceptionParams.DistanceScoreWeighting;
+            float AngleScore = ( 1.0f - ( AngleInFront / PerceptionParams.MaxTargetingAngle ) )  * PerceptionParams.AngleScoreWeighting;
+
+            UnitTargetScore += DistanceScore;
+            UnitTargetScore += AngleScore;
 
             if ( PerceptionParams.UsePopularityUnBiasing )
             {
@@ -100,7 +185,8 @@ public class AIPerceptionComponent : MonoBehaviour
                 }
             }
 
-            UnitTargetScore *= PerceptionParams.Targetable.Contains( Ent.Type ) ? 1.0f : 0.25f;
+            UnitTargetScore *= PerceptionParams.Targetable.Contains( Ent.Type ) ? 1.0f : 1.0f - PerceptionParams.TargetableTypePickiness;
+            UnitTargetScore *= CanSee ? 1.0f : 0.0f;
 
             if ( Ent == CurrentTarget )
             {
@@ -115,18 +201,28 @@ public class AIPerceptionComponent : MonoBehaviour
                     BestTarget = Ent;
                 }
             }
+            #if UNITY_EDITOR
+            DebugPercievedEntities.Add( new DebugPercievedEntityCache( 
+                Ent, 
+                UnitTargetScore,
+                new DebugPercievedEntityCache.DebugScoreCache(
+                    DistanceScore,
+                    AngleScore )
+                ) 
+            );
+            #endif
         }
 
         if ( BestTarget != CurrentTarget )
         {
-            if ( BestScore >= CurrentTargetScore * PerceptionParams.RetargetThreshold )
+            if ( !CurrentTarget )
             {
                 SetNewTarget( BestTarget );
             }
-        }
-        else
-        {
-            SetNewTarget( BestTarget );
+            else if ( (BestScore >= CurrentTargetScore * PerceptionParams.RetargetThreshold) || BestTarget == null )
+            {
+                SetNewTarget( BestTarget );
+            }
         }
     }
 }

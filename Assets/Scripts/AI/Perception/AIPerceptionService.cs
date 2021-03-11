@@ -5,6 +5,7 @@ using UnityEngine;
 public class AIPerceptionTickAggregator
 {
     private List<AIPerceptionComponent> ActivePercievers = new List<AIPerceptionComponent>();
+    private Dictionary<AIPerceptionComponent, bool> QueueModifyPercievers = new Dictionary<AIPerceptionComponent, bool>(); // true = remove
     private MonoBehaviour MonoReference; 
     private bool FinishedTicking = true;
 
@@ -15,18 +16,35 @@ public class AIPerceptionTickAggregator
 
     public void Add( AIPerceptionComponent Perciever )
     {
-        ActivePercievers.Add( Perciever );
+        QueueModifyPercievers.Add( Perciever, false );
     }
 
     public void Remove( AIPerceptionComponent Perciever )
     {
-        ActivePercievers.Remove( Perciever );
+        QueueModifyPercievers.Add( Perciever, true );
+    }
+
+    private void FlushQueuedPercievers()
+    {
+        foreach( var PercieverQueue in QueueModifyPercievers )
+        {
+            if ( PercieverQueue.Value )
+            {
+                ActivePercievers.Remove( PercieverQueue.Key );
+            }
+            else
+            {
+                ActivePercievers.Add( PercieverQueue.Key );
+            }
+        }
+        QueueModifyPercievers.Clear();
     }
 
     public void Update()
     {
-        if ( FinishedTicking && ActivePercievers.Count > 0 )
+        if ( FinishedTicking )
         {
+            FlushQueuedPercievers();
             MonoReference.StartCoroutine( TickPercivers() );
         }
     }
@@ -34,6 +52,7 @@ public class AIPerceptionTickAggregator
     private IEnumerator TickPercivers()
     {
         FinishedTicking = false;
+
         foreach ( AIPerceptionComponent Perciever in ActivePercievers )
         {
             if ( Perciever )
@@ -68,8 +87,10 @@ public class AIPerceptionService : GameService
     private Dictionary< Faction, List<Entity> > AllignedUnits = new Dictionary<Faction, List<Entity>>();
     private AIPerceptionTickAggregator TickAggregator;
 
-    private void Start()
+    public override void InitialiseGameService()
     {
+        base.InitialiseGameService();
+
         Entity.onEntityCreated += EntityCreated;
         Entity.onEntityDestroyed += EntityDestroyed;
         TickAggregator = new AIPerceptionTickAggregator( this );
@@ -125,7 +146,11 @@ public class AIPerceptionService : GameService
 
     public List<Entity> GetAllignedUnits( Faction FactionType )
     {
-        return AllignedUnits[FactionType];
+        if ( AllignedUnits.TryGetValue( FactionType, out List<Entity> Entities ) )
+        {
+            return Entities;
+        }
+        return new List<Entity>();
     }
 
     private void Update()

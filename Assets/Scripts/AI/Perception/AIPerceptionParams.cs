@@ -7,12 +7,16 @@ public class AIPerceptionParams : ScriptableObject
 {
     [Header("Targeting")]
     public bool UsePopularityUnBiasing;
-    public float MinTargetingTime;
-    public float MaxTargetingTime;
+    public float TargetingTime;
     public float MaxTargetingRange;
     public float MaxTargetingAngle;
+
+    [Header("Target Selection")]
     public List<Entity.EntityType> Targetable = new List<Entity.EntityType>();
     public float RetargetThreshold;
+    public float DistanceScoreWeighting = 1.0f;
+    public float AngleScoreWeighting = 1.0f;
+    public float TargetableTypePickiness = 1.0f;
     
     [Header("Perception")]
     public float EyeHeight;

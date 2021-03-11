@@ -19,10 +19,15 @@ public class ActiveAIUnitUIDisplay : MonoBehaviour
         if ( StatOverview != null )
         {
             StatOverview.Reset();
-            foreach ( StatTypes.Stat PositiveStat in Unit.GetUnitData().GetPositiveStats() )
+            AIFriendlyUnitData Data = Unit.GetUnitData();
+            if ( Data != null )
             {
-                StatOverview.AddStat( PositiveStat );
+                foreach ( StatTypes.Stat PositiveStat in Data.GetPositiveStats() )
+                {
+                    StatOverview.AddStat( PositiveStat );
+                }
             }
+            
         }
     }
 

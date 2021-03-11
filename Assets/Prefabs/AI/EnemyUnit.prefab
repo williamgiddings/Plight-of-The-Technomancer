@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 4650081904082814711}
   - component: {fileID: 1119838670368348860}
   - component: {fileID: -6658807981890150788}
-  m_Layer: 0
+  - component: {fileID: 6038482118418624416}
+  m_Layer: 10
   m_Name: EnemyUnit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,6 +87,9 @@ MonoBehaviour:
   AllignedFaction: 0
   Type: 0
   Params: {fileID: 11400000, guid: 582b3608940cd614c92194efedd3b49e, type: 2}
+  Head: {fileID: 5116882644916637623}
+  MinAimPitch: -65
+  MaxAimPitch: 50
 --- !u!54 &4650081904082814711
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -98,9 +102,9 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &1119838670368348860
 MonoBehaviour:
@@ -128,8 +132,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PerceptionParams: {fileID: 11400000, guid: 7191e4afd382b2445975a8f722e0459f, type: 2}
---- !u!65 &4650081903026603859
-BoxCollider:
+--- !u!64 &6038482118418624416
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4650081904082814715}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!64 &9003621585807086412
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -138,11 +156,12 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.9838, y: 2.1173418, z: 3.8342123}
-  m_Center: {x: 0, y: 1.4784068, z: 0.94321084}
---- !u!65 &4650081904987827796
-BoxCollider:
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2749265896460310151, guid: 8ac8ac64e54b09245b8849cd281bfe46, type: 3}
+--- !u!64 &7942051536986911232
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -151,9 +170,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.1423852, y: 3.9687743, z: 2.110197}
-  m_Center: {x: 0, y: -1.1912968, z: 0.07949239}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2749265896460310151, guid: e9e69dbc24987d240aba425e5f016290, type: 3}
 --- !u!1001 &4650081903879260799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -208,6 +228,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e9e69dbc24987d240aba425e5f016290, type: 3}
       propertyPath: m_Name
       value: MechLegs
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9e69dbc24987d240aba425e5f016290, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e9e69dbc24987d240aba425e5f016290, type: 3}
@@ -280,6 +304,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8ac8ac64e54b09245b8849cd281bfe46, type: 3}
       propertyPath: m_Name
       value: MechHead
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8ac8ac64e54b09245b8849cd281bfe46, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ac8ac64e54b09245b8849cd281bfe46, type: 3}

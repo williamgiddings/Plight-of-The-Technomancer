@@ -1,19 +1,54 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class AIAgent : Entity
 {
     protected Vector3 Destination;
-    protected Damageable DamageableComponent;
+    protected AIPerceptionComponent PerceptionComponent;
+
+    protected bool LookingAtTarget = false;
 
     private AISurfaceProjectionService SurfaceProjectionService;
 
-    protected virtual void Start()
+    public override void Start()
     {
+        base.Start();
         SurfaceProjectionService = GameState.GetGameService<AISurfaceProjectionService>();
-        DamageableComponent = GetComponent<Damageable>();
+        PerceptionComponent = GetComponent<AIPerceptionComponent>();
         DamageableComponent.OnHealthZero += OnDie;
+        RegisterEvents();
+    }
+
+    protected void RegisterEvents()
+    {
+        if ( PerceptionComponent )
+        {
+            PerceptionComponent.onTargetAquired += OnPerceptionTargetAquired;
+            PerceptionComponent.onTargetLost += OnPerceptionTargetLost;
+        }
+    }
+
+    protected virtual void LookAtTarget()
+    {
+
+    }
+
+    protected virtual void OnPerceptionTargetAquired( Entity InEntity )
+    {
+
+    }
+
+    protected virtual void OnPerceptionTargetLost()
+    {
+
+    }
+
+
+    protected virtual void OnDestroy()
+    {
+        transform.DOKill();
     }
 
     public Damageable GetDamageableComponent()

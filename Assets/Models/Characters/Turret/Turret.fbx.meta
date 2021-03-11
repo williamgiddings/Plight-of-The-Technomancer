@@ -9,6 +9,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_Turret
     second: {fileID: 2100000, guid: c612b8331d5a9d64db117fcf609192fd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_TurretLights
+    second: {fileID: 2100000, guid: d88a2121a844c624792198978dca9db1, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

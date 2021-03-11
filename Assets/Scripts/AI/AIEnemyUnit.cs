@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,10 +10,63 @@ public class AIEnemyUnit : AIAgent
     private EnemyVATAnimator Animator;
     private AIWave AssociatedWave;
 
+    [Header("Aiming Visual")]
+    public Transform Head;
+    public float MinAimPitch;
+    public float MaxAimPitch;
+
+    private Entity CacheEntityTarget;
+
     public void Init()
     {
         Animator = GetComponent<EnemyVATAnimator>();
         StartCoroutine( HeadToShootingPosition() );
+    }
+
+    public override void Start()
+    {
+        base.Start();
+        PerceptionComponent.SetHeadTransform( Head.transform );
+    }
+
+    protected override void LookAtTarget()
+    {
+        LookingAtTarget = false;
+        Quaternion NewRotation = GetTurretRotation();
+        Head.DORotate( NewRotation.eulerAngles, PerceptionComponent.PerceptionParams.TargetingTime ).onComplete += delegate() { LookingAtTarget = true; };
+    }
+
+    private void FixedUpdate()
+    {
+        if ( CacheEntityTarget && LookingAtTarget )
+        {
+            Quaternion NewRotation = GetTurretRotation();
+            Head.rotation = NewRotation;
+        }
+    }
+
+    protected override void OnPerceptionTargetAquired( Entity InEntity )
+    {
+        CacheEntityTarget = InEntity;
+        LookAtTarget();
+    }
+
+    protected override void OnPerceptionTargetLost()
+    {
+        CacheEntityTarget = null;
+        LookingAtTarget = false;
+
+        Head.DOLocalRotate( Vector3.zero, PerceptionComponent.PerceptionParams.TargetingTime );
+    }
+
+    Quaternion GetTurretRotation()
+    {
+        Vector3 TurretLookPos = CacheEntityTarget.transform.position - Head.transform.position;
+        float NewAnglePitch = -TurretLookPos.y;
+        NewAnglePitch = Mathf.Clamp( NewAnglePitch, MinAimPitch, MaxAimPitch );
+        Quaternion NewRotation = Quaternion.LookRotation(new Vector3(TurretLookPos.x, 0.0f, TurretLookPos.z ) ) * Quaternion.Euler( NewAnglePitch, 0.0f, 0.0f );
+        
+        return NewRotation;
     }
 
     private void Damageable_OnHealthZero( DamageSource Source )

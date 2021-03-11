@@ -111,7 +111,6 @@ public class AISpawnService : GameService
             SpawnedUnit.SetDestination( RandomPointOnUnitCircle( SpawnAngle += UnitSpawnSeperation, DestinationRadius, 0.0f ) );
             SpawnedUnit.Init();
         }
-
     }
 
     public Vector3 RandomPointOnUnitCircle( float InDegrees, float Radius, float Height )

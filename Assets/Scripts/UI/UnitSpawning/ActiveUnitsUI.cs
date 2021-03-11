@@ -9,7 +9,7 @@ public class ActiveUnitsUI : MonoBehaviour
     public GridLayoutGroup Grid;
     private Dictionary< AIFriendlyUnit, ActiveAIUnitUIDisplay > ActiveUIs = new Dictionary<AIFriendlyUnit, ActiveAIUnitUIDisplay >();
 
-    private void Start()
+    private void Awake()
     {
         AIFriendlyUnit.onFriendlyUnitSpawned += AddSpawnedUnit;
         AIFriendlyUnit.onFriendlyUnitDestroyed += RemoveSpawnedUnit;

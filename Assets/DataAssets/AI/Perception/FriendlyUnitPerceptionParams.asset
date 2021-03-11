@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a0742a707f6694ebed4a0c61b266d3, type: 3}
   m_Name: FriendlyUnitPerceptionParams
   m_EditorClassIdentifier: 
-  MinTargetingTime: 1
-  MaxTargetingTime: 3
+  UsePopularityUnBiasing: 0
+  TargetingTime: 0.5
   MaxTargetingRange: 100
-  MaxTargetingAngle: 180
-  Targetable: 00000000
+  MaxTargetingAngle: 360
+  Targetable: 0100000000000000
   RetargetThreshold: 1.2
-  EyeHeight: 5
+  DistanceScoreWeighting: 3
+  AngleScoreWeighting: 0.25
+  TargetableTypePickiness: 0.85
+  EyeHeight: 3.5
   TargetingPerceptionLayers:
     serializedVersion: 2
     m_Bits: 1024
