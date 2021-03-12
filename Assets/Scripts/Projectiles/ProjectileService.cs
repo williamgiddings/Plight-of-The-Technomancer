@@ -1,15 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
+[System.Serializable]
 public struct UnitProjectileBinding
 {
     public AIEnemyUnitTypes UnitType;
     public Projectile ProjectileType;
 }
 
-public class Projectile : Transform
+[System.Serializable]
+public class Projectile
 {
     [System.Serializable]
     public struct ProjectileAppearanceData
@@ -27,12 +30,15 @@ public class Projectile : Transform
     public ProjectileAppearanceData Appearance;
     public Vector3 Scale;
    
-    private float InstancingTime;
     private float TimeUnitlImpact;
+
+    private Matrix4x4 ProjectileTransform;
+    private Vector3 ProjectileDirection;
 
     public Projectile( Projectile Template, ProjectileHitInformation HitInfo, Vector3 Origin, Vector3 Direction )
     {
         ProjectileSpeed = Template.ProjectileSpeed;
+        Scale = Template.Scale;
 
         Appearance = new ProjectileAppearanceData() 
         { 
@@ -40,23 +46,21 @@ public class Projectile : Transform
             ProjectileMaterial = Template.Appearance.ProjectileMaterial
         };
 
-
-        InstancingTime = Time.time;
-        TimeUnitlImpact = InstancingTime + ( HitInfo.HitDistance / ProjectileSpeed );
-
-        SetPositionAndRotation( Origin, Quaternion.LookRotation( Direction ) );
-        localScale = Scale;
+        TimeUnitlImpact = HitInfo.HitDistance / ProjectileSpeed;
+        ProjectileDirection = Direction;
+        ProjectileTransform = Matrix4x4.TRS( Origin, Quaternion.LookRotation( ProjectileDirection, Vector3.up ), Scale );
     }
 
     public Matrix4x4 GetMatrix()
     {
-        return localToWorldMatrix;
+        return ProjectileTransform;
     }
 
     public bool Tick( float DeltaTime ) //returns true if done
     {
         TimeUnitlImpact -= DeltaTime;
-        position += forward * ( ProjectileSpeed * DeltaTime );
+        Vector3 NewPosition = ProjectileTransform.ExtractPosition() + (ProjectileDirection * ( ProjectileSpeed * DeltaTime ));
+        ProjectileTransform.SetTRS( NewPosition, Quaternion.LookRotation( ProjectileDirection, Vector3.up ), Scale );
 
         return TimeUnitlImpact <= 0.0f;     
     }
@@ -112,17 +116,15 @@ public class ProjectileService : GameService
 
     public Projectile CreateProjectile( GameObject Owner, AIEnemyUnitTypes UnitProjectileType, Entity Target, Vector3 StartPosition  )
     {
-        Vector3 Direction = (StartPosition - Target.transform.position).normalized;
+        Vector3 Direction = Target ? (StartPosition - Target.transform.position).normalized : Owner.transform.forward;
         if ( Physics.Raycast(StartPosition, Direction, out RaycastHit Hit, ProjectileLayerMask ) )
         {
             Projectile ProjectileType = GetProjectileForUnitType(UnitProjectileType);
             ProjectileHitInformation HitInfo = new ProjectileHitInformation(Hit, Owner, Target);
 
-            if ( ProjectileType )
+            if ( ProjectileType != null )
             {
-                Projectile NewProjectile = new Projectile( ProjectileType, HitInfo, StartPosition, Direction );
-                PredeterminedProjectilePaths.Add( NewProjectile, HitInfo );
-
+                PredeterminedProjectilePaths.Add( new Projectile( ProjectileType, HitInfo, StartPosition, Direction ), HitInfo );
             }
         }
         
@@ -142,6 +144,7 @@ public class ProjectileService : GameService
     private void Update()
     {
         Dictionary<AIEnemyUnitTypes, ProjectileMatrixData> ProjectileDataSet = new Dictionary<AIEnemyUnitTypes, ProjectileMatrixData>();
+        List<Projectile> RemoveQueue = new List<Projectile>();
 
         foreach ( KeyValuePair<Projectile, ProjectileHitInformation> ActiveProjectile in PredeterminedProjectilePaths )
         {
@@ -149,14 +152,28 @@ public class ProjectileService : GameService
             {
                 //Hit!
                 ProcessHit( ActiveProjectile );
+                RemoveQueue.Add(ActiveProjectile.Key);
             }
             if ( ProjectileDataSet.TryGetValue( ActiveProjectile.Key.DamageType, out ProjectileMatrixData Data ) )
             {
                 Data.ProjectileCollection.Add( ActiveProjectile.Key );
                 Data.MatrixCollection.Add( ActiveProjectile.Key.GetMatrix() );
             }
+            else
+            {
+                ProjectileMatrixData NewData = new ProjectileMatrixData();
+                NewData.ProjectileCollection.Add( ActiveProjectile.Key );
+                NewData.MatrixCollection.Add( ActiveProjectile.Key.GetMatrix() );
+                ProjectileDataSet.Add( ActiveProjectile.Key.DamageType, NewData );
+            }
         }
         RenderProjectiles( ProjectileDataSet );
+        CleanUpProjectiles(RemoveQueue);
+    }
+
+    private void CleanUpProjectiles( List<Projectile> InRemoveQueue )
+    {
+        InRemoveQueue.ForEach( ProjectileToRemove => RemoveProjectile( ProjectileToRemove ) );
     }
 
     void RenderProjectiles( Dictionary<AIEnemyUnitTypes, ProjectileMatrixData> RenderableProjectiles )
@@ -169,6 +186,7 @@ public class ProjectileService : GameService
                 Graphics.DrawMeshInstanced( Appearance.ProjectileMesh, 0, Appearance.ProjectileMaterial, ProjectileTypes.Value.MatrixCollection );
             }
         }
+
     }
 
     void ProcessHit( KeyValuePair<Projectile, ProjectileHitInformation> ProjectileInfo )
@@ -176,11 +194,14 @@ public class ProjectileService : GameService
         Projectile ProjectileReference = ProjectileInfo.Key;
         ProjectileHitInformation HitInfo = ProjectileInfo.Value;
         
-        bool OnTarget = HitInfo.TargetEntity.gameObject == HitInfo.HitEntity;
-
-        if ( OnTarget )
+        if ( HitInfo.TargetEntity )
         {
-            HitInfo.TargetEntity.TryDealDamage( new DamageSource( ProjectileReference.DamageType, HitInfo.ProjectileOwner, ProjectileInfo.Key.ProjectileDamage ) );
+            bool OnTarget = HitInfo.TargetEntity.gameObject == HitInfo.HitEntity;
+
+            if ( OnTarget )
+            {
+                HitInfo.TargetEntity.TryDealDamage( new DamageSource( ProjectileReference.DamageType, HitInfo.ProjectileOwner, ProjectileInfo.Key.ProjectileDamage ) );
+            }
         }
     }
 }

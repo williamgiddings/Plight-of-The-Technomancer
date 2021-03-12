@@ -21065,19 +21065,49 @@ MonoBehaviour:
   m_GameObject: {fileID: 719336108}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a38c6cf8a3a225749bd5b7fce6438178, type: 3}
+  m_Script: {fileID: 11500000, guid: 2cf21500761d2314ab71d39280a5080f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dynamic: 1
-  gameObjectPrefab:
-  - prefab: {fileID: 2526893592928471428, guid: bae7bf70430b3c241ba4b6a6465811db, type: 3}
-    pooledAmount: 20
-  - prefab: {fileID: 7242846228030955924, guid: ecf223d1070221b4290101ff52b7382a, type: 3}
-    pooledAmount: 20
-  - prefab: {fileID: 6710167101893770446, guid: 5fb7fc2d1f69e874db701ee5c4512545, type: 3}
-    pooledAmount: 20
-  - prefab: {fileID: 961263023075180493, guid: 29b42a3ada72ead45ae13dd238dad027, type: 3}
-    pooledAmount: 20
+  ProjectileLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  ProjectileBindings:
+  - UnitType: 0
+    ProjectileType:
+      ProjectileSpeed: 60
+      ProjectileDamage: 10
+      DamageType: 0
+      Appearance:
+        ProjectileMesh: {fileID: -462981019419857548, guid: 8a6241854423acf4f8e74cfa26018632, type: 3}
+        ProjectileMaterial: {fileID: 2100000, guid: 5a7a91970d778944e855a439d5eda59e, type: 2}
+      Scale: {x: 0.4, y: 0.4, z: 0.4}
+  - UnitType: 1
+    ProjectileType:
+      ProjectileSpeed: 60
+      ProjectileDamage: 10
+      DamageType: 1
+      Appearance:
+        ProjectileMesh: {fileID: -462981019419857548, guid: 8a6241854423acf4f8e74cfa26018632, type: 3}
+        ProjectileMaterial: {fileID: 2100000, guid: cd6a991d36b13914181c4e23fbb8a657, type: 2}
+      Scale: {x: 0.4, y: 0.4, z: 0.4}
+  - UnitType: 2
+    ProjectileType:
+      ProjectileSpeed: 120
+      ProjectileDamage: 10
+      DamageType: 2
+      Appearance:
+        ProjectileMesh: {fileID: -462981019419857548, guid: 8a6241854423acf4f8e74cfa26018632, type: 3}
+        ProjectileMaterial: {fileID: 2100000, guid: 5b044415b9162084ab019ffae4b70cb5, type: 2}
+      Scale: {x: 0.2, y: 0.2, z: 0.5}
+  - UnitType: 3
+    ProjectileType:
+      ProjectileSpeed: 40
+      ProjectileDamage: 10
+      DamageType: 3
+      Appearance:
+        ProjectileMesh: {fileID: 6416302070336371891, guid: e82997f54f108334ca565d1c35905aee, type: 3}
+        ProjectileMaterial: {fileID: 2100000, guid: f4bfab532b9036845994279cbaf2a1c2, type: 2}
+      Scale: {x: 2, y: 2, z: 2}
 --- !u!1001 &730042459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21087,7 +21117,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 1b7ae996d170c244296048fd95603acb, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1b7ae996d170c244296048fd95603acb, type: 3}
       propertyPath: m_LocalScale.x
@@ -43522,7 +43552,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: a69d2160062288c44b9ff4b618818c7b, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a69d2160062288c44b9ff4b618818c7b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -44199,6 +44229,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllignedFaction: 1
   Type: 1
+--- !u!114 &1674249293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674249286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0161244bb4ab924eb48ec765c8d2e40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AmmoType: 3
 --- !u!1 &1675177974
 GameObject:
   m_ObjectHideFlags: 0
@@ -50039,7 +50082,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.038186558, y: -0.026142806}
+  m_AnchoredPosition: {x: 0.038186558, y: -0.012591175}
   m_SizeDelta: {x: 1009.4, y: 220}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1723810042
@@ -51115,7 +51158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00048828125, y: -0.072143555}
+  m_AnchoredPosition: {x: -0.00048828125, y: -0.06951904}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1815090042
@@ -71592,7 +71635,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2943192106240822127, guid: da1387d0267baf94597c1f058e59f80a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da1387d0267baf94597c1f058e59f80a, type: 3}
