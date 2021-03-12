@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PC_Gun : MonoBehaviour
 {
-    public AIEnemyUnitTypes AmmoType;
+    public ProjectileTypes AmmoType = ProjectileTypes.Blast;
     private ProjectileService ProjectileServiceInstance;
     
 

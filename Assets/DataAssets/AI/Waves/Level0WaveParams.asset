@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxUnitsInWave: 10
   MinUnitsInWave: 5
+  NumUnitTypes: 1
   AvailibleUnits:
     Entries:
     - AccumulatedWeight: 1

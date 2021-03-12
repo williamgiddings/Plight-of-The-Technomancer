@@ -4,18 +4,18 @@ using UnityEngine;
 
 public struct DamageSource
 {
-    public DamageSource( AIEnemyUnitTypes InType, GameObject InInstigator, float InAmount)
+    public DamageSource( ProjectileTypes InType, GameObject InInstigator, float InAmount)
     {
         DamageType = InType;
         DamageInstigator = InInstigator;
         DamageAmount = InAmount;
     }
 
-    AIEnemyUnitTypes DamageType;
+    ProjectileTypes DamageType;
     GameObject DamageInstigator;
     float DamageAmount;
 
-    public AIEnemyUnitTypes GetDamageType()
+    public ProjectileTypes GetDamageType()
     {
         return DamageType;
     }

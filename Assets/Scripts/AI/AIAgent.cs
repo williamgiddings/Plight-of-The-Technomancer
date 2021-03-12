@@ -5,10 +5,17 @@ using DG.Tweening;
 
 public class AIAgent : Entity
 {
+    [Header("Engagement")]
+    public Transform[] MuzzleLocations;
+    
     protected Vector3 Destination;
     protected AIPerceptionComponent PerceptionComponent;
-
+    [SerializeField]
+    protected AIEngagementParams EngagementParams;
     protected bool LookingAtTarget = false;
+    protected AIEngager Engager;
+    protected float LastEngageTime = 0.0f;
+    protected bool ReadyToEngage = true;
 
     private AISurfaceProjectionService SurfaceProjectionService;
 
@@ -18,7 +25,13 @@ public class AIAgent : Entity
         SurfaceProjectionService = GameState.GetGameService<AISurfaceProjectionService>();
         PerceptionComponent = GetComponent<AIPerceptionComponent>();
         DamageableComponent.OnHealthZero += OnDie;
+        Engager = new AIEngager( this, EngagementParams.BarragesPerEngagement, ref MuzzleLocations );
         RegisterEvents();
+    }
+
+    public void SetEngagementParams( AIEngagementParams EngageParams )
+    {
+        EngagementParams = EngageParams;
     }
 
     protected void RegisterEvents()
@@ -27,6 +40,15 @@ public class AIAgent : Entity
         {
             PerceptionComponent.onTargetAquired += OnPerceptionTargetAquired;
             PerceptionComponent.onTargetLost += OnPerceptionTargetLost;
+        }
+
+        if (Engager != null)
+        {
+            Engager.onBarrageFinished += delegate ( float TimeFinished ) 
+            {
+                LastEngageTime = TimeFinished;
+                ReadyToEngage = true;
+            };
         }
     }
 
@@ -68,6 +90,11 @@ public class AIAgent : Entity
     public void SetDestination( Vector3 InDestination )
     {
         Destination = InDestination;
+    }
+
+    void FinishedEngaging( float TimeStamp )
+    {
+
     }
 
     protected virtual void OnDie()

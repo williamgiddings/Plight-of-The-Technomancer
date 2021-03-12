@@ -1,17 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-//TODO
-//Update UnitSpawnUI to use the collection of available units in here instead of its own collection
+[System.Serializable]
+public class EnemyUnitParamBinding
+{
+    public AIEnemyUnitTypes Type;
+    public AIEnemyUnitParams Params;
+}
+
 
 public class AISpawnService : GameService
 {
     [Header( "Global" )]
     public AIGlobalParams GlobalParams;
 
-    [Header("Enemy Waves")]
+    [Header("Enemy Units")]
     public AIWaveDescParams[] WaveFormations;
+    public List<EnemyUnitParamBinding> UnitTypes =  new List<EnemyUnitParamBinding>();
 
     [Header("Friendly Units")]
     public AIFriendlyUnit FriendlyUnitPrefab;
@@ -32,7 +37,7 @@ public class AISpawnService : GameService
     public event AIDelegates.FriendlyUnitDataDelegate onFriendlyUnitNotAvailible;
 
     private AIWave CurrentWave;
-    private AIFriendlyUnitFactory FriendlyUnitFactory;
+    private AIUnitFactory UnitFactory;
     private Dictionary<AIFriendlyUnitData, int> AvailableUnitQuantities = new Dictionary<AIFriendlyUnitData, int>();
     private AISurfaceProjectionService ProjectionService;
 
@@ -40,7 +45,7 @@ public class AISpawnService : GameService
     {
         base.InitialiseGameService();
         FabricatingUnitTimerObject.onTimerCompleted += onUnitFinishedFabricating;
-        FriendlyUnitFactory = new AIFriendlyUnitFactory();
+        UnitFactory = new AIUnitFactory( SpawnOrigin );
     }
 
     void onUnitFinishedFabricating( FabricatingUnitTimerObject TimedObject )
@@ -79,18 +84,6 @@ public class AISpawnService : GameService
         }
     }
 
-    private AIEnemyUnit SpawnEnemyAIUnit( AIEnemyUnit UnitType, AIWave AssociatedWave, Vector3 Position )
-    {
-        AIEnemyUnit Unit = Instantiate<AIEnemyUnit>(
-            UnitType,
-            Position,
-            Quaternion.LookRotation( (Position - SpawnOrigin).normalized, Vector3.up )
-            );
-
-        AssociatedWave.AddUnit( Unit );
-        return Unit;
-    }
-
     private void SpawnEnemyWave()
     {
         if (CurrentWave != null)
@@ -100,17 +93,42 @@ public class AISpawnService : GameService
         CurrentWave = new AIWave();
         AIWaveDescParams SelectedWave = WaveFormations[0]; // Wave Selection based on current progression
         AIEnemyUnit Unit = SelectedWave.AvailibleUnits.Get( Random.Range( 0, 1 ) );
+        List<AIEnemyUnitTypes> AvailableUnitTypes = GetNUnitTypes(SelectedWave.NumUnitTypes);
 
         int NumUnitsToSpawn = Random.Range( SelectedWave.MinUnitsInWave, SelectedWave.MaxUnitsInWave );
-
         float SpawnAngle = Random.Range( 0f, 360.0f );
 
         for ( int i = 0; i < NumUnitsToSpawn; i++ )
         {
-            AIEnemyUnit SpawnedUnit = SpawnEnemyAIUnit( Unit, CurrentWave, RandomPointOnUnitCircle( SpawnAngle += UnitSpawnSeperation, SpawnRadius, SpawnOrigin.y ) );
+            AIEnemyUnitParams Params = GetParamsForType( AvailableUnitTypes[Random.Range(0, AvailableUnitTypes.Count)] );
+            AIEnemyUnit SpawnedUnit = UnitFactory.SpawnEnemyAIUnit( Unit, CurrentWave, RandomPointOnUnitCircle( SpawnAngle += UnitSpawnSeperation, SpawnRadius, SpawnOrigin.y ), Params );
             SpawnedUnit.SetDestination( RandomPointOnUnitCircle( SpawnAngle += UnitSpawnSeperation, DestinationRadius, 0.0f ) );
             SpawnedUnit.Init();
         }
+    }
+
+    private List<AIEnemyUnitTypes> GetNUnitTypes( int N )
+    {
+        List<AIEnemyUnitTypes> Types = new List<AIEnemyUnitTypes>();
+
+        if ( UnitTypes.Count > 0)
+        {
+            for ( int i = 0; i < N; i++ )
+            {
+                Types.Add( UnitTypes[Random.Range( 0, UnitTypes.Count - 1 )].Type );
+            }
+        }
+        return Types;
+    }
+
+    private AIEnemyUnitParams GetParamsForType( AIEnemyUnitTypes Type )
+    {
+        EnemyUnitParamBinding ParamBinding = UnitTypes.Find( ParamBinding => ParamBinding.Type == Type );
+        if ( ParamBinding != null )
+        {
+            return ParamBinding.Params;
+        }
+        return null;
     }
 
     public Vector3 RandomPointOnUnitCircle( float InDegrees, float Radius, float Height )
@@ -140,7 +158,7 @@ public class AISpawnService : GameService
 
         if (Unit != null)
         {
-            AIFriendlyUnit NewUnit = FriendlyUnitFactory.CreateNewUnit( FriendlyUnitPrefab, Unit );
+            AIFriendlyUnit NewUnit = UnitFactory.CreateNewFriendlyUnit( FriendlyUnitPrefab, Unit, GlobalParams.FriendlyUnitDefaults.Engagement );
             NewUnit.transform.position = new Vector3( X, Y, Z );
             RemoveSpawnableUnit( Unit );
             return true;

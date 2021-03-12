@@ -9,17 +9,32 @@ public class GameState : MonoBehaviour
 
     public static event DelegateUtils.VoidDelegateNoArgs onGameStateFinishedInitialisation;
 
+#if UNITY_EDITOR
+    [ExecuteInEditMode]
+    private void OnValidate()
+    {
+        GameStateInstance = this;
+        LoadGameServices();
+    }
+#endif
+
     private void Start()
     {
         GameStateInstance = this;
+        LoadGameServices();
+        StartCoroutine( FinishInitialization ());
+    }
+
+    private void LoadGameServices()
+    {
         GameServices = GetComponents<GameService>();
-        
+
         foreach ( GameService Service in GameServices )
         {
             Service.InitialiseGameService();
         }
-        StartCoroutine( FinishInitialization ());
     }
+
     private IEnumerator FinishInitialization()
     {
         yield return new WaitForEndOfFrame();
@@ -42,4 +57,21 @@ public class GameState : MonoBehaviour
         return null;
     }
 
+    public static bool TryGetGameService<Service>( out Service OutService ) where Service : GameService
+    {
+        OutService = null;
+        if ( GameStateInstance )
+        {
+            foreach ( GameService ServiceInstance in GameStateInstance.GameServices )
+            {
+                Service CastedService = ServiceInstance.GetService() as Service;
+                if ( CastedService )
+                {
+                    OutService = CastedService;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

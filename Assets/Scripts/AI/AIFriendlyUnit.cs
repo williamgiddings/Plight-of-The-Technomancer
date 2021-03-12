@@ -112,6 +112,12 @@ public class AIFriendlyUnit : AIAgent
 
             TurretBase.rotation = NewBaseRotation;
             TurretGun.localRotation = NewTurretAngle;
+
+            if ( ReadyToEngage && Time.time >= ( LastEngageTime + EngagementParams.Cooldown ) )
+            {
+                ReadyToEngage = false;
+                Engager.Engage( CacheEntityTarget );
+            }
         }
     }
 

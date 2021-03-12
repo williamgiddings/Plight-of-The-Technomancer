@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AIEnemyUnit : AIAgent
 {
-    public AIUnitParams Params;
+    public AIEnemyUnitParams Params;
 
     private EnemyVATAnimator Animator;
     private AIWave AssociatedWave;
@@ -33,15 +33,24 @@ public class AIEnemyUnit : AIAgent
     {
         LookingAtTarget = false;
         Quaternion NewRotation = GetTurretRotation();
-        Head.DORotate( NewRotation.eulerAngles, PerceptionComponent.PerceptionParams.TargetingTime ).onComplete += delegate() { LookingAtTarget = true; };
+        
+        Head.DORotate( NewRotation.eulerAngles, PerceptionComponent.PerceptionParams.TargetingTime ).onComplete += delegate() 
+        { 
+            LookingAtTarget = true; 
+        };
     }
 
     private void FixedUpdate()
     {
         if ( CacheEntityTarget && LookingAtTarget )
         {
-            Quaternion NewRotation = GetTurretRotation();
-            Head.rotation = NewRotation;
+            Head.rotation = GetTurretRotation();
+
+            if ( ReadyToEngage && Time.time >= (LastEngageTime + EngagementParams.Cooldown) )
+            {
+                ReadyToEngage = false;
+                Engager.Engage( CacheEntityTarget );
+            }
         }
     }
 

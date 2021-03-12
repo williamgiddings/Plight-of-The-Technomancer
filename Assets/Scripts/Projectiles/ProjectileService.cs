@@ -3,11 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ProjectileTypes
+{
+    Fire,
+    Arc,
+    Kinetic,
+    Blast,
+    Friendly
+}
 
 [System.Serializable]
 public struct UnitProjectileBinding
 {
-    public AIEnemyUnitTypes UnitType;
+    public ProjectileTypes UnitType;
     public Projectile ProjectileType;
 }
 
@@ -24,7 +32,7 @@ public class Projectile
     [Header("Projectile Stats")]
     public float ProjectileSpeed;
     public float ProjectileDamage;
-    public AIEnemyUnitTypes DamageType;
+    public ProjectileTypes DamageType;
 
     [Header("Projectile Appearance")]
     public ProjectileAppearanceData Appearance;
@@ -39,6 +47,7 @@ public class Projectile
     {
         ProjectileSpeed = Template.ProjectileSpeed;
         Scale = Template.Scale;
+        DamageType = Template.DamageType;
 
         Appearance = new ProjectileAppearanceData() 
         { 
@@ -114,9 +123,9 @@ public class ProjectileService : GameService
         // ...    
     }
 
-    public Projectile CreateProjectile( GameObject Owner, AIEnemyUnitTypes UnitProjectileType, Entity Target, Vector3 StartPosition  )
-    {
-        Vector3 Direction = Target ? (StartPosition - Target.transform.position).normalized : Owner.transform.forward;
+    public Projectile CreateProjectile( GameObject Owner, ProjectileTypes UnitProjectileType, Entity Target, Vector3 StartPosition  )
+    {    
+        Vector3 Direction = Target ? GetCenterMassTargetDir(StartPosition, Target) : Owner.transform.forward;
         if ( Physics.Raycast(StartPosition, Direction, out RaycastHit Hit, ProjectileLayerMask ) )
         {
             Projectile ProjectileType = GetProjectileForUnitType(UnitProjectileType);
@@ -131,19 +140,24 @@ public class ProjectileService : GameService
         return null;
     }
 
+    private Vector3 GetCenterMassTargetDir( Vector3 StartPosition, Entity Target )
+    {
+        return -( StartPosition - (Target.transform.position+Target.GetCenterMass()) ).normalized;
+    }
+
     void RemoveProjectile( Projectile OldProjectile )
     {
         PredeterminedProjectilePaths.Remove( OldProjectile );
     }
 
-    private Projectile GetProjectileForUnitType( AIEnemyUnitTypes UnitType )
+    public Projectile GetProjectileForUnitType( ProjectileTypes UnitType )
     {
         return ProjectileBindings.Find( Binding => Binding.UnitType == UnitType ).ProjectileType;
     }
 
     private void Update()
     {
-        Dictionary<AIEnemyUnitTypes, ProjectileMatrixData> ProjectileDataSet = new Dictionary<AIEnemyUnitTypes, ProjectileMatrixData>();
+        Dictionary<ProjectileTypes, ProjectileMatrixData> ProjectileDataSet = new Dictionary<ProjectileTypes, ProjectileMatrixData>();
         List<Projectile> RemoveQueue = new List<Projectile>();
 
         foreach ( KeyValuePair<Projectile, ProjectileHitInformation> ActiveProjectile in PredeterminedProjectilePaths )
@@ -176,9 +190,9 @@ public class ProjectileService : GameService
         InRemoveQueue.ForEach( ProjectileToRemove => RemoveProjectile( ProjectileToRemove ) );
     }
 
-    void RenderProjectiles( Dictionary<AIEnemyUnitTypes, ProjectileMatrixData> RenderableProjectiles )
+    void RenderProjectiles( Dictionary<ProjectileTypes, ProjectileMatrixData> RenderableProjectiles )
     {
-        foreach ( KeyValuePair<AIEnemyUnitTypes, ProjectileMatrixData> ProjectileTypes in RenderableProjectiles )
+        foreach ( KeyValuePair<ProjectileTypes, ProjectileMatrixData> ProjectileTypes in RenderableProjectiles )
         {
             if ( ProjectileTypes.Value.ProjectileCollection.Count > 0)
             {
@@ -186,7 +200,6 @@ public class ProjectileService : GameService
                 Graphics.DrawMeshInstanced( Appearance.ProjectileMesh, 0, Appearance.ProjectileMaterial, ProjectileTypes.Value.MatrixCollection );
             }
         }
-
     }
 
     void ProcessHit( KeyValuePair<Projectile, ProjectileHitInformation> ProjectileInfo )

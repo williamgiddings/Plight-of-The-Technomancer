@@ -6,6 +6,7 @@ using UnityEngine;
 public class AIFriendUnitParams : ScriptableObject
 {
     public AIFriendlyUnit DefaultObject;
+    public AIEngagementParams Engagement;
 
     [Header("Health")]
     public float MaxHealth;

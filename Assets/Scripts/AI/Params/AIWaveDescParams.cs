@@ -7,6 +7,7 @@ public class AIWaveDescParams : ScriptableObject
 {
     public int MaxUnitsInWave;
     public int MinUnitsInWave;
+    public int NumUnitTypes;
     public WeightedCollection<AIEnemyUnit> AvailibleUnits;
 
 }

@@ -52,7 +52,11 @@ public class Damageable : MonoBehaviour
                 Debug.Log( string.Format( "{0} was Destroyed by {1}'s {2}", gameObject.name, InDamage.GetDamageInstigator().name, InDamage.GetDamageType().ToString() ) );
                 OnHealthZero();
             }
-            OnNormalisedHealthChange( Health / HealthParams.MaxHealth );
+            
+            if ( OnNormalisedHealthChange != null )
+            {
+                OnNormalisedHealthChange( Health / HealthParams.MaxHealth );
+            }
         }
     }
 

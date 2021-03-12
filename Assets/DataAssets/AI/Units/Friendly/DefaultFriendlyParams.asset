@@ -13,27 +13,8 @@ MonoBehaviour:
   m_Name: DefaultFriendlyParams
   m_EditorClassIdentifier: 
   DefaultObject: {fileID: 4605201394845627059, guid: 8b5446342c87a6549abe99552beb6e86, type: 3}
-  MaxHealth:
-    Binding: 0
-    Value: 100
-  HeatResistance:
-    Binding: 1
-    Value: 0
-  KineticResistance:
-    Binding: 3
-    Value: 0
-  EnergyResistance:
-    Binding: 2
-    Value: 0
-  BlastResistance:
-    Binding: 4
-    Value: 0
-  DeployTime:
-    Binding: 5
-    Value: 3
-  FireRate:
-    Binding: 6
-    Value: 3
-  TargettingTime:
-    Binding: 7
-    Value: 2
+  Engagement: {fileID: 11400000, guid: c32c91b3c69ef894da17acd1ad022fba, type: 2}
+  MaxHealth: 0
+  DeployTime: 0
+  FireRate: 0
+  TargettingTime: 0

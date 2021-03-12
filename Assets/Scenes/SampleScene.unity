@@ -7468,6 +7468,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FriendlyUnit (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1650462496183510708, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
+      propertyPath: EngagementParams
+      value: 
+      objectReference: {fileID: 11400000, guid: c32c91b3c69ef894da17acd1ad022fba, type: 2}
     - target: {fileID: 1650462496183510711, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -20993,6 +20997,15 @@ MonoBehaviour:
   GlobalParams: {fileID: 11400000, guid: 1083441ccfa9b42448876b73788eae6d, type: 2}
   WaveFormations:
   - {fileID: 11400000, guid: 6fccfb55b17715f43a9238eb1b863b83, type: 2}
+  UnitTypes:
+  - Type: 0
+    Params: {fileID: 11400000, guid: 303a0f2ec69f83349ae19567bf6a5b05, type: 2}
+  - Type: 1
+    Params: {fileID: 11400000, guid: a85ee0e38125fe249b1b4eb76def7915, type: 2}
+  - Type: 2
+    Params: {fileID: 11400000, guid: e48fe6cc3537de5459e926661a7b2068, type: 2}
+  - Type: 3
+    Params: {fileID: 11400000, guid: dae3fa5fbd31a0e47b9eaef2b00d4fa4, type: 2}
   FriendlyUnitPrefab: {fileID: 1650462496183510708, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
   FriendlySpawnableUnits: {fileID: 11400000, guid: c55b0922d2a71994abcc19bd047b0653, type: 2}
   FriendlySpawnRect: {fileID: 1488030133}
@@ -21078,7 +21091,7 @@ MonoBehaviour:
       ProjectileDamage: 10
       DamageType: 0
       Appearance:
-        ProjectileMesh: {fileID: -462981019419857548, guid: 8a6241854423acf4f8e74cfa26018632, type: 3}
+        ProjectileMesh: {fileID: -462981019419857548, guid: 3bf4f5c2d28f3f142b7036e1a60544c8, type: 3}
         ProjectileMaterial: {fileID: 2100000, guid: 5a7a91970d778944e855a439d5eda59e, type: 2}
       Scale: {x: 0.4, y: 0.4, z: 0.4}
   - UnitType: 1
@@ -21087,27 +21100,36 @@ MonoBehaviour:
       ProjectileDamage: 10
       DamageType: 1
       Appearance:
-        ProjectileMesh: {fileID: -462981019419857548, guid: 8a6241854423acf4f8e74cfa26018632, type: 3}
+        ProjectileMesh: {fileID: -462981019419857548, guid: e30833ba73838074c9ea9911e86b62cb, type: 3}
         ProjectileMaterial: {fileID: 2100000, guid: cd6a991d36b13914181c4e23fbb8a657, type: 2}
       Scale: {x: 0.4, y: 0.4, z: 0.4}
   - UnitType: 2
     ProjectileType:
       ProjectileSpeed: 120
-      ProjectileDamage: 10
+      ProjectileDamage: 5.5
       DamageType: 2
       Appearance:
-        ProjectileMesh: {fileID: -462981019419857548, guid: 8a6241854423acf4f8e74cfa26018632, type: 3}
+        ProjectileMesh: {fileID: -462981019419857548, guid: c0fe3ef25e138fa45a2a2a4f42cdbe79, type: 3}
         ProjectileMaterial: {fileID: 2100000, guid: 5b044415b9162084ab019ffae4b70cb5, type: 2}
       Scale: {x: 0.2, y: 0.2, z: 0.5}
   - UnitType: 3
     ProjectileType:
       ProjectileSpeed: 40
-      ProjectileDamage: 10
+      ProjectileDamage: 26
       DamageType: 3
       Appearance:
         ProjectileMesh: {fileID: 6416302070336371891, guid: e82997f54f108334ca565d1c35905aee, type: 3}
         ProjectileMaterial: {fileID: 2100000, guid: f4bfab532b9036845994279cbaf2a1c2, type: 2}
       Scale: {x: 2, y: 2, z: 2}
+  - UnitType: 4
+    ProjectileType:
+      ProjectileSpeed: 60
+      ProjectileDamage: 10
+      DamageType: 4
+      Appearance:
+        ProjectileMesh: {fileID: -462981019419857548, guid: 79977cbd78100644cb19e8d976d235d7, type: 3}
+        ProjectileMaterial: {fileID: 2100000, guid: 85e3237b9e1fb264f89c34a79966f35a, type: 2}
+      Scale: {x: 1, y: 1, z: 1}
 --- !u!1001 &730042459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22820,6 +22842,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FriendlyUnit (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1650462496183510708, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
+      propertyPath: EngagementParams
+      value: 
+      objectReference: {fileID: 11400000, guid: c32c91b3c69ef894da17acd1ad022fba, type: 2}
     - target: {fileID: 1650462496183510711, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -42390,6 +42416,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FriendlyUnit (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1650462496183510708, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
+      propertyPath: EngagementParams
+      value: 
+      objectReference: {fileID: 11400000, guid: c32c91b3c69ef894da17acd1ad022fba, type: 2}
     - target: {fileID: 1650462496183510711, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -50082,7 +50112,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.038186558, y: -0.012591175}
+  m_AnchoredPosition: {x: 0.038186558, y: -0.024206169}
   m_SizeDelta: {x: 1009.4, y: 220}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1723810042
@@ -51158,7 +51188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00048828125, y: -0.06951904}
+  m_AnchoredPosition: {x: -0.00048828125, y: -0.035339355}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1815090042
@@ -76405,6 +76435,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FriendlyUnit
       objectReference: {fileID: 0}
+    - target: {fileID: 1650462496183510708, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
+      propertyPath: EngagementParams
+      value: 
+      objectReference: {fileID: 11400000, guid: c32c91b3c69ef894da17acd1ad022fba, type: 2}
     - target: {fileID: 1650462496183510711, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -76449,10 +76483,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7709339784128243888, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
-      propertyPath: TestCamera
-      value: 
-      objectReference: {fileID: 584250864}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7df3667ed2332624cb859d5c980016b1, type: 3}
 --- !u!1 &7757298485013911112
