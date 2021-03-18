@@ -12,7 +12,7 @@ public class AINamingService : GameService
     List<string> AINames = new List<string>();
     List<string> RegisteredNames = new List<string>();
 
-    private void Start()
+    protected override void Begin()
     {
         AINames.AddRange( AINamesAsset.text.Split( '\n' ) );
         AIFriendlyUnit.onFriendlyUnitDestroyed += NamedUnitDestroyed;

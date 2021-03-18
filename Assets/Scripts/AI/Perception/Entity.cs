@@ -17,17 +17,26 @@ public class Entity : MonoBehaviour
 
     public static DelegateUtils.VoidDelegateEntityArg onEntityDestroyed;
     public static DelegateUtils.VoidDelegateEntityArg onEntityCreated;
+    public GameObject OnDestroyEffect;
 
     protected Damageable DamageableComponent;
 
     private int ActiveTargetOf;
     private Vector3 CenterOfMass;
 
-    public virtual void Start()
+    public void ForceKill()
     {
+        if ( DamageableComponent )
+        {
+            DamageableComponent.ForceKill();
+        }
+    }
+
+    protected virtual void Start()
+    {
+        DamageableComponent = GetComponent<Damageable>();
         onEntityCreated( this );
         CacheCenterMass();
-        DamageableComponent = GetComponent<Damageable>();
     }
 
     private void CacheCenterMass()
@@ -44,9 +53,14 @@ public class Entity : MonoBehaviour
         return CenterOfMass;
     }
 
-    public void OnDestroy()
+    protected virtual void OnDestroy()
     {
         onEntityDestroyed( this );
+        
+        if ( OnDestroyEffect )
+        {
+            Instantiate( OnDestroyEffect, transform.position, Quaternion.identity );
+        }
     }
 
     public void Target()

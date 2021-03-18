@@ -13,7 +13,7 @@ public class Binoculars : MonoBehaviour
     public float ZoomSpeed;
     public GameObject BinocularUI;
     
-    private Camera Cam;
+    private Camera[] Cameras;
     private float MaximumFOV;
     private float CurrentBlendValue;
 
@@ -24,9 +24,9 @@ public class Binoculars : MonoBehaviour
 
     private void Start()
     {
-        Cam = GetComponent<Camera>();
+        Cameras = GetComponentsInChildren<Camera>();
         PostFX = GetComponent<Volume>();
-        MaximumFOV = Cam.fieldOfView;
+        MaximumFOV = Cameras[0].fieldOfView;
         InitPostFX();
     }
 
@@ -67,6 +67,10 @@ public class Binoculars : MonoBehaviour
 
         LD.intensity.Override( NewValue );
         V.intensity.Override( NewValue );
-        Cam.fieldOfView = MaximumFOV - ( ( MaximumFOV - MinimumFOV ) * Value);
+        
+        foreach( Camera Cam in Cameras )
+        {
+            Cam.fieldOfView = MaximumFOV - ( ( MaximumFOV - MinimumFOV ) * Value );
+        }
     }
 }

@@ -19,19 +19,24 @@ public class AIAgent : Entity
 
     private AISurfaceProjectionService SurfaceProjectionService;
 
-    public override void Start()
+    protected override void Start()
     {
         base.Start();
+        
+        if ( EngagementParams && Engager == null )
+        {
+            SetEngagementParams( EngagementParams );
+        }
+
         SurfaceProjectionService = GameState.GetGameService<AISurfaceProjectionService>();
         PerceptionComponent = GetComponent<AIPerceptionComponent>();
-        DamageableComponent.OnHealthZero += OnDie;
-        Engager = new AIEngager( this, EngagementParams.BarragesPerEngagement, ref MuzzleLocations );
         RegisterEvents();
     }
 
     public void SetEngagementParams( AIEngagementParams EngageParams )
     {
         EngagementParams = EngageParams;
+        Engager = new AIEngager( this, EngagementParams.BarragesPerEngagement, ref MuzzleLocations );
     }
 
     protected void RegisterEvents()
@@ -50,6 +55,8 @@ public class AIAgent : Entity
                 ReadyToEngage = true;
             };
         }
+
+        DamageableComponent.OnHealthZero += OnDie;
     }
 
     protected virtual void LookAtTarget()
@@ -68,9 +75,13 @@ public class AIAgent : Entity
     }
 
 
-    protected virtual void OnDestroy()
+    protected override void OnDestroy()
     {
-        transform.DOKill();
+        base.OnDestroy();
+        for ( int ChildIndex = 0; ChildIndex < transform.childCount; ChildIndex++ )
+        {
+            transform.GetChild( ChildIndex ).DOKill();
+        }
     }
 
     public Damageable GetDamageableComponent()

@@ -27,4 +27,25 @@ public static class StatTypes
             Stat.STAT_FireRate,
             Stat.STAT_TargettingTime
         };
+
+    public static bool GetStatFromDamageType( ProjectileTypes ProjectileType, out Stat OutHealthStat )
+    {
+        OutHealthStat = Stat.STAT_Health;
+        switch (ProjectileType)
+        {
+            case ProjectileTypes.Fire:
+                OutHealthStat = Stat.STAT_HeatResistance;
+                return true;
+            case ProjectileTypes.Arc:
+                OutHealthStat = Stat.STAT_EnergyResistance;
+                return true;
+            case ProjectileTypes.Kinetic:
+                OutHealthStat = Stat.STAT_KineticResistance;
+                return true;
+            case ProjectileTypes.Blast:
+                OutHealthStat = Stat.STAT_BlastResistance;
+                return true;
+        }
+        return false;
+    }
 }

@@ -91,9 +91,7 @@ public class AIEnemyPartColourService : GameService
     private List<AIEnemyPartConfiguration> ReservedConfigurations = new List<AIEnemyPartConfiguration>();
     private Dictionary< AIEnemyUnitTypes, AIEnemyPartConfiguration > UnitTypePartConfigurations;
 
-    public event DelegateUtils.VoidDelegateNoArgs onUnitPartConfigurationsInitialised;
-
-    private void Start()
+    protected override void Begin()
     {
         InitPartConfigurations();
     }
@@ -107,7 +105,6 @@ public class AIEnemyPartColourService : GameService
         {
             UnitTypePartConfigurations.Add( Class, GetNewColourConfiguration() );
         }
-        onUnitPartConfigurationsInitialised();
     }
 
     public AIEnemyPartConfiguration GetNewColourConfiguration()

@@ -14,48 +14,104 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CraftableUnitTypes:
   - Data:
-      UnitName: Light Fire Bingus
+      UnitName: Light Fire Resistant
+      Resistances:
+        HeatResistance: 1
+        KineticResistance: 0
+        EnergyResistance: 0
+        BlastResistance: 0
       MaxHealth: 1
-      HeatResistance: 1
-      KineticResistance: 0
-      EnergyResistance: 0
-      BlastResistance: 0
       DeployTime: 1
       FireRate: 1
       TargettingTime: 1
     FabricationCost: 2
     FabricationTime: 5
   - Data:
-      UnitName: Heavy Fire Bingus
+      UnitName: Heavy Fire Resistant
+      Resistances:
+        HeatResistance: 1
+        KineticResistance: 0
+        EnergyResistance: 0
+        BlastResistance: 0
       MaxHealth: 2
-      HeatResistance: 1
-      KineticResistance: 0
-      EnergyResistance: 0
-      BlastResistance: 0
       DeployTime: 2
       FireRate: 0.8
       TargettingTime: 1.5
     FabricationCost: 4
     FabricationTime: 10
   - Data:
-      UnitName: Light Arc Bingus
+      UnitName: Light Arc Resistant
+      Resistances:
+        HeatResistance: 0
+        KineticResistance: 0
+        EnergyResistance: 1
+        BlastResistance: 0
       MaxHealth: 1
-      HeatResistance: 0
-      KineticResistance: 0
-      EnergyResistance: 1
-      BlastResistance: 0
       DeployTime: 1
       FireRate: 1
       TargettingTime: 1
     FabricationCost: 2
     FabricationTime: 5
   - Data:
-      UnitName: Heavy Arc Bingus
+      UnitName: Heavy Arc Resistant
+      Resistances:
+        HeatResistance: 0
+        KineticResistance: 0
+        EnergyResistance: 1
+        BlastResistance: 0
       MaxHealth: 2
-      HeatResistance: 0
-      KineticResistance: 0
-      EnergyResistance: 1
-      BlastResistance: 0
+      DeployTime: 2
+      FireRate: 0.8
+      TargettingTime: 1.5
+    FabricationCost: 4
+    FabricationTime: 10
+  - Data:
+      UnitName: Light Kinetic Resistant
+      Resistances:
+        HeatResistance: 0
+        KineticResistance: 1
+        EnergyResistance: 0
+        BlastResistance: 0
+      MaxHealth: 1
+      DeployTime: 1
+      FireRate: 1
+      TargettingTime: 1
+    FabricationCost: 2
+    FabricationTime: 5
+  - Data:
+      UnitName: Heavy Kinetic Resistant
+      Resistances:
+        HeatResistance: 0
+        KineticResistance: 1
+        EnergyResistance: 0
+        BlastResistance: 0
+      MaxHealth: 2
+      DeployTime: 2
+      FireRate: 0.8
+      TargettingTime: 1.5
+    FabricationCost: 4
+    FabricationTime: 10
+  - Data:
+      UnitName: Light Blast Resistant
+      Resistances:
+        HeatResistance: 0
+        KineticResistance: 0
+        EnergyResistance: 0
+        BlastResistance: 1
+      MaxHealth: 1
+      DeployTime: 1
+      FireRate: 1
+      TargettingTime: 1
+    FabricationCost: 2
+    FabricationTime: 5
+  - Data:
+      UnitName: Heavty Blast Resistant
+      Resistances:
+        HeatResistance: 0
+        KineticResistance: 0
+        EnergyResistance: 0
+        BlastResistance: 1
+      MaxHealth: 2
       DeployTime: 2
       FireRate: 0.8
       TargettingTime: 1.5

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Cooldown: 3
   BarragesPerEngagement:
-  - Delay: 0.18
+  - Delay: 0
     MuzzleIndex: 0
     ProjectileType: 4
   - Delay: 0.18
@@ -23,3 +23,4 @@ MonoBehaviour:
   - Delay: 0.18
     MuzzleIndex: 0
     ProjectileType: 4
+  DamagePerSecond: 8.928571

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
+
 #if UNITY_EDITOR
 public struct DebugPercievedEntityCache
 {
@@ -24,7 +25,6 @@ public struct DebugPercievedEntityCache
             AngleScore = InAngleScore;
         }
     }
-
 
     public DebugPercievedEntityCache( Entity InEnt, float InScore, DebugScoreCache ScoreBreakDown )
     {
@@ -58,12 +58,13 @@ public class AIPerceptionComponent : MonoBehaviour
     private void Start()
     {
         ThisEntity = GetComponent<Entity>();
+        Entity.onEntityDestroyed += OnEntityDestroyed;
         CachedAIPerceptionService = GameState.GetGameService<AIPerceptionService>();
 
-        if (CachedAIPerceptionService)
+        if ( CachedAIPerceptionService )
         {
             CachedAIPerceptionService.RegisterPerciever( this );
-        }    
+        }
     }
 
     public void SetHeadTransform( Transform NewHead )
@@ -90,7 +91,7 @@ public class AIPerceptionComponent : MonoBehaviour
             }
             onTargetAquired( Target );
         }
-        else if ( Target != CurrentTarget )
+        else if ( Target != CurrentTarget  )
         {
             onTargetLost();
         }
@@ -223,6 +224,14 @@ public class AIPerceptionComponent : MonoBehaviour
             {
                 SetNewTarget( BestTarget );
             }
+        }
+    }
+
+    private void OnEntityDestroyed( Entity DestroyedEntity )
+    {
+        if ( DestroyedEntity == CurrentTarget )
+        {
+            onTargetLost();
         }
     }
 }

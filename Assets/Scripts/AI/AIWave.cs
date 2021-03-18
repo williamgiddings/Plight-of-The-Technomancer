@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class AIWave
 {
-    List<AIEnemyUnit> ActiveEnemyUnits = new List<AIEnemyUnit>();
+    public uint ID { get; }
+    public event DelegateUtils.VoidDelegateNoArgs onComplete;
+    
+    private List<AIEnemyUnit> ActiveEnemyUnits = new List<AIEnemyUnit>();
+
+    public AIWave( uint WaveIndex )
+    {
+        ID = WaveIndex;
+    }
 
     public void AddUnit( AIEnemyUnit Unit )
     {
@@ -28,14 +36,16 @@ public class AIWave
 
     private void WaveComplete()
     {
-        Debug.Log("Wave Defeated");
+        onComplete();
     }
 
     public void TearDown()
     {
-        foreach( AIEnemyUnit Unit in ActiveEnemyUnits)
+        List<AIEnemyUnit> Units = new List<AIEnemyUnit>( ActiveEnemyUnits );
+
+        foreach( AIEnemyUnit Unit in Units )
         {
-            GameObject.Destroy( Unit );
+            Unit.ForceKill();
         }
     }
 }

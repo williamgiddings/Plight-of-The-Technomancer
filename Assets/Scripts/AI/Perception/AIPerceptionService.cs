@@ -87,10 +87,8 @@ public class AIPerceptionService : GameService
     private Dictionary< Faction, List<Entity> > AllignedUnits = new Dictionary<Faction, List<Entity>>();
     private AIPerceptionTickAggregator TickAggregator;
 
-    public override void InitialiseGameService()
+    protected override void Begin()
     {
-        base.InitialiseGameService();
-
         Entity.onEntityCreated += EntityCreated;
         Entity.onEntityDestroyed += EntityDestroyed;
         TickAggregator = new AIPerceptionTickAggregator( this );
@@ -155,6 +153,9 @@ public class AIPerceptionService : GameService
 
     private void Update()
     {
-        TickAggregator.Update();
+        if ( TickAggregator != null )
+        {
+            TickAggregator.Update();
+        }
     }
 }

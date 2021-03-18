@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class AIEnemyUnit : AIAgent
 {
-    public AIEnemyUnitParams Params;
-
+    private AIEnemyUnitTypes UnitType;
+    private AIEnemyUnitParams Params;
     private EnemyVATAnimator Animator;
+    private AIEnemyAppearanceComponent AppearanceComponent;
     private AIWave AssociatedWave;
 
     [Header("Aiming Visual")]
@@ -17,16 +18,30 @@ public class AIEnemyUnit : AIAgent
 
     private Entity CacheEntityTarget;
 
-    public void Init()
+    protected override void Start()
     {
+        base.Start();
         Animator = GetComponent<EnemyVATAnimator>();
+        AppearanceComponent = GetComponent<AIEnemyAppearanceComponent>();
+        PerceptionComponent.SetHeadTransform( Head.transform );
+        AppearanceComponent.SetupPartColours( UnitType );
+
         StartCoroutine( HeadToShootingPosition() );
     }
 
-    public override void Start()
+    public void SetUnitParams( AIEnemyUnitParams NewParams )
     {
-        base.Start();
-        PerceptionComponent.SetHeadTransform( Head.transform );
+        Params = NewParams;
+    }
+
+    public void SetUnitType( AIEnemyUnitTypes InUnitType )
+    {
+        UnitType = InUnitType;
+    }
+
+    public AIEnemyUnitTypes GetUnitType()
+    {
+        return UnitType;
     }
 
     protected override void LookAtTarget()
@@ -42,16 +57,19 @@ public class AIEnemyUnit : AIAgent
 
     private void FixedUpdate()
     {
-        if ( CacheEntityTarget && LookingAtTarget )
+        if ( Engager != null )
         {
-            Head.rotation = GetTurretRotation();
-
-            if ( ReadyToEngage && Time.time >= (LastEngageTime + EngagementParams.Cooldown) )
+            if ( CacheEntityTarget && LookingAtTarget )
             {
-                ReadyToEngage = false;
-                Engager.Engage( CacheEntityTarget );
+                Head.rotation = GetTurretRotation();
+
+                if ( ReadyToEngage && Time.time >= ( LastEngageTime + EngagementParams.Cooldown ) )
+                {
+                    ReadyToEngage = false;
+                    Engager.Engage( CacheEntityTarget );
+                }
             }
-        }
+        }     
     }
 
     protected override void OnPerceptionTargetAquired( Entity InEntity )
@@ -78,10 +96,9 @@ public class AIEnemyUnit : AIAgent
         return NewRotation;
     }
 
-    private void Damageable_OnHealthZero( DamageSource Source )
+    protected override void OnDestroy()
     {
-        AssociatedWave.OnUnitDestroyed( this );
-        Destroy( gameObject );
+        base.OnDestroy(); 
     }
 
     public void SetAssociatedWave( AIWave InWave )
@@ -108,5 +125,11 @@ public class AIEnemyUnit : AIAgent
             yield return new WaitForEndOfFrame();
         }
         Animator.SetState( EnemyVATAnimator.EnemyAnimState.Idle );
+    }
+
+    protected override void OnDie()
+    {
+        AssociatedWave.OnUnitDestroyed( this );
+        Destroy( gameObject );
     }
 }

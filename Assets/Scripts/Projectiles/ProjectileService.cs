@@ -42,23 +42,7 @@ public class Projectile
 
     private Matrix4x4 ProjectileTransform;
     private Vector3 ProjectileDirection;
-
-    public Projectile( Projectile Template, ProjectileHitInformation HitInfo, Vector3 Origin, Vector3 Direction )
-    {
-        ProjectileSpeed = Template.ProjectileSpeed;
-        Scale = Template.Scale;
-        DamageType = Template.DamageType;
-
-        Appearance = new ProjectileAppearanceData() 
-        { 
-            ProjectileMesh = Template.Appearance.ProjectileMesh,
-            ProjectileMaterial = Template.Appearance.ProjectileMaterial
-        };
-
-        TimeUnitlImpact = HitInfo.HitDistance / ProjectileSpeed;
-        ProjectileDirection = Direction;
-        ProjectileTransform = Matrix4x4.TRS( Origin, Quaternion.LookRotation( ProjectileDirection, Vector3.up ), Scale );
-    }
+    private Vector3 ProjectileOrigin;
 
     public Matrix4x4 GetMatrix()
     {
@@ -72,6 +56,23 @@ public class Projectile
         ProjectileTransform.SetTRS( NewPosition, Quaternion.LookRotation( ProjectileDirection, Vector3.up ), Scale );
 
         return TimeUnitlImpact <= 0.0f;     
+    }
+
+    public Projectile Create( ProjectileHitInformation HitInfo, Vector3 Origin, Vector3 Direction )
+    {
+        Projectile NewProjectile = ( Projectile ) this.MemberwiseClone();
+
+        NewProjectile.TimeUnitlImpact = HitInfo.HitDistance / NewProjectile.ProjectileSpeed;
+        NewProjectile.ProjectileDirection = Direction;
+        NewProjectile.ProjectileTransform = Matrix4x4.TRS( Origin, Quaternion.LookRotation( NewProjectile.ProjectileDirection, Vector3.up ), NewProjectile.Scale );
+        NewProjectile.ProjectileOrigin = Origin;
+
+        return NewProjectile;
+    }
+
+    public Vector3 GetOrigin()
+    {
+        return ProjectileOrigin;
     }
 }
 
@@ -116,13 +117,6 @@ public class ProjectileService : GameService
         }
     }
 
-    public override void InitialiseGameService()
-    {
-        base.InitialiseGameService();
-
-        // ...    
-    }
-
     public Projectile CreateProjectile( GameObject Owner, ProjectileTypes UnitProjectileType, Entity Target, Vector3 StartPosition  )
     {    
         Vector3 Direction = Target ? GetCenterMassTargetDir(StartPosition, Target) : Owner.transform.forward;
@@ -133,7 +127,7 @@ public class ProjectileService : GameService
 
             if ( ProjectileType != null )
             {
-                PredeterminedProjectilePaths.Add( new Projectile( ProjectileType, HitInfo, StartPosition, Direction ), HitInfo );
+                PredeterminedProjectilePaths.Add( ProjectileType.Create( HitInfo, StartPosition, Direction ), HitInfo );
             }
         }
         
@@ -159,7 +153,7 @@ public class ProjectileService : GameService
     {
         Dictionary<ProjectileTypes, ProjectileMatrixData> ProjectileDataSet = new Dictionary<ProjectileTypes, ProjectileMatrixData>();
         List<Projectile> RemoveQueue = new List<Projectile>();
-
+        
         foreach ( KeyValuePair<Projectile, ProjectileHitInformation> ActiveProjectile in PredeterminedProjectilePaths )
         {
             if ( ActiveProjectile.Key.Tick( Time.deltaTime ) )
@@ -181,8 +175,8 @@ public class ProjectileService : GameService
                 ProjectileDataSet.Add( ActiveProjectile.Key.DamageType, NewData );
             }
         }
-        RenderProjectiles( ProjectileDataSet );
         CleanUpProjectiles(RemoveQueue);
+        RenderProjectiles( ProjectileDataSet ); 
     }
 
     private void CleanUpProjectiles( List<Projectile> InRemoveQueue )
@@ -213,7 +207,7 @@ public class ProjectileService : GameService
 
             if ( OnTarget )
             {
-                HitInfo.TargetEntity.TryDealDamage( new DamageSource( ProjectileReference.DamageType, HitInfo.ProjectileOwner, ProjectileInfo.Key.ProjectileDamage ) );
+                HitInfo.TargetEntity.TryDealDamage( new DamageSource( ProjectileReference.DamageType, HitInfo.ProjectileOwner, ProjectileInfo.Key.ProjectileDamage, ProjectileReference.GetOrigin() ) );
             }
         }
     }

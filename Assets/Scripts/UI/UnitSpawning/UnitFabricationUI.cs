@@ -20,9 +20,11 @@ public class UnitFabricationUI : MonoBehaviour
 
     private void Start()
     {
-        GameState.onGameStateFinishedInitialisation += onInitialize;
         CraftableUnitDisplay.onCraftableUnitSelected += onTryFabricatingUnit;
         FabricatingUnitTimerObject.onTimerCompleted += onFabricationTimerComplete;
+
+        SpawnService = GameState.GetGameService<AISpawnService>();
+        PopulateCraftableUnits();
     }
 
     private void Update()
@@ -31,12 +33,6 @@ public class UnitFabricationUI : MonoBehaviour
         {
             UnitsFabricating[TimerIndex].TickTimer( Time.deltaTime );
         }
-    }
-
-    private void onInitialize()
-    {
-        SpawnService = GameState.GetGameService<AISpawnService>();
-        PopulateCraftableUnits();
     }
 
     private void PopulateCraftableUnits()

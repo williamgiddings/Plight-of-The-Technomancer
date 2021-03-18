@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +29,12 @@ public class Damageable : MonoBehaviour
         }
     }
 
-    #if UNITY_EDITOR
+    public void ForceKill()
+    {
+        TakeDamage( new DamageSource( ProjectileTypes.Friendly, gameObject, Health ) );
+    }
+
+#if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
         if ( HealthParams )
@@ -45,7 +51,7 @@ public class Damageable : MonoBehaviour
         if ( HealthParams && Health > 0 )
         {
             DamageHistory.Add( InDamage );
-            Health -= InDamage.GetDamageAmount();
+            Health -= ProcessDamageSource( InDamage ).GetDamageAmount();
 
             if ( Health <= 0 )
             {
@@ -58,6 +64,11 @@ public class Damageable : MonoBehaviour
                 OnNormalisedHealthChange( Health / HealthParams.MaxHealth );
             }
         }
+    }
+
+    protected virtual DamageSource ProcessDamageSource( DamageSource InSource )
+    {
+        return InSource;
     }
 
 }

@@ -6,7 +6,11 @@ public class GameService : MonoBehaviour
 {
     private GameService GameServiceInstance;
 
-    public virtual void InitialiseGameService()
+    protected virtual void Begin()
+    {
+    }
+
+    public void InitialiseGameService()
     {
         if ( GameServiceInstance )
         {
@@ -16,6 +20,7 @@ public class GameService : MonoBehaviour
             }
         }
         GameServiceInstance = this;
+        GameState.onServicesLoaded += Begin;
     }
 
     public GameService GetService()

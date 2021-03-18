@@ -23,11 +23,7 @@ public class EnemyClassificationUI : MonoBehaviour
     private void Start()
     {
         PartColourService = GameState.GetGameService<AIEnemyPartColourService>();
-        
-        if ( PartColourService )
-        {
-            PartColourService.onUnitPartConfigurationsInitialised += UpdateTextDescriptions;
-        }
+        UpdateTextDescriptions();
     }
 
     private void UpdateTextDescriptions()

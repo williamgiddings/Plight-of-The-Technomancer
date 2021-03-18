@@ -8,12 +8,11 @@ public class AIFriendlyUnitData
 {
     public string   UnitName;
 
-    public float    MaxHealth;
-    public float    HeatResistance;
-    public float    KineticResistance;
-    public float    EnergyResistance;
-    public float    BlastResistance;
+    [Header("Resistance")]
+    public StatResistance Resistances;
 
+    [Header("Stats")]
+    public float    MaxHealth;
     public float    DeployTime;
     public float    FireRate;
     public float    TargettingTime;
@@ -78,11 +77,7 @@ public class AIFriendlyUnitData
 
     public void Combine( AIFriendlyUnitData OtherObject )
     {
-        HeatResistance = OtherObject.HeatResistance;
-        KineticResistance = OtherObject.KineticResistance;
-        EnergyResistance = OtherObject.EnergyResistance;
-        BlastResistance = OtherObject.BlastResistance;
-
+        Resistances = OtherObject.Resistances;
         MaxHealth *= OtherObject.MaxHealth;
         DeployTime *= OtherObject.DeployTime;
         FireRate *= OtherObject.FireRate;
@@ -91,27 +86,26 @@ public class AIFriendlyUnitData
 
     public float GetStatBinding( StatTypes.Stat Stat )
     {
-        switch ( Stat )
+        if ( Resistances.TryGetStatBinding(Stat, out float BindingValue ) )
         {
-            case StatTypes.Stat.STAT_Health:
-                return MaxHealth;
-            case StatTypes.Stat.STAT_HeatResistance:
-                return HeatResistance;
-            case StatTypes.Stat.STAT_EnergyResistance:
-                return EnergyResistance;
-            case StatTypes.Stat.STAT_KineticResistance:
-                return KineticResistance;
-            case StatTypes.Stat.STAT_BlastResistance:
-                return BlastResistance;
-            case StatTypes.Stat.STAT_DeployTime:
-                return DeployTime;
-            case StatTypes.Stat.STAT_FireRate:
-                return FireRate;
-            case StatTypes.Stat.STAT_TargettingTime:
-                return TargettingTime;
-            default:
-                return 0.0f;
-
+            return BindingValue;
         }
+        else
+        {
+            switch ( Stat )
+            {
+                case StatTypes.Stat.STAT_Health:
+                    return MaxHealth;
+                case StatTypes.Stat.STAT_DeployTime:
+                    return DeployTime;
+                case StatTypes.Stat.STAT_FireRate:
+                    return FireRate;
+                case StatTypes.Stat.STAT_TargettingTime:
+                    return TargettingTime;
+                default:
+                    return 0.0f;
+
+            }
+        }      
     }
 }

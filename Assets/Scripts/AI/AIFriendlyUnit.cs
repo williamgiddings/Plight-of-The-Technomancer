@@ -20,7 +20,7 @@ public class AIFriendlyUnit : AIAgent
     private Optional<AIFriendlyUnitData> UnitData;
     private Entity CacheEntityTarget;
 
-    public override void Start()
+    protected override void Start()
     {
         base.Start();
         onFriendlyUnitSpawned( this );
@@ -48,7 +48,11 @@ public class AIFriendlyUnit : AIAgent
     {
         CacheEntityTarget = null;
         LookingAtTarget = false;
-        AimingLights.material.SetColor( "_EmissionColor", Color.blue * 4.0f );
+        
+        if ( AimingLights )
+        {
+            AimingLights.material.SetColor( "_EmissionColor", Color.blue * 4.0f );
+        }
 
         TurretBase.DORotate( Vector3.zero, PerceptionComponent.PerceptionParams.TargetingTime );
         TurretGun.DOLocalRotate( Vector3.zero, PerceptionComponent.PerceptionParams.TargetingTime );
@@ -63,7 +67,13 @@ public class AIFriendlyUnit : AIAgent
         if ( DefaultParams )
         {
             UnitData = new AIFriendlyUnitData( DefaultParams );
-            UnitData.Get().Combine(Modifier);
+            UnitData.Get().Combine( Modifier );
+
+            ResistingDamageable DamageableComponentAsResisting = GetComponent<ResistingDamageable>();
+            if ( DamageableComponentAsResisting )
+            {
+                DamageableComponentAsResisting.SetResistances( UnitData.Get().Resistances );
+            } 
         }
     }
 
@@ -105,20 +115,23 @@ public class AIFriendlyUnit : AIAgent
 
     private void FixedUpdate()
     {
-        if ( CacheEntityTarget && LookingAtTarget )
+        if ( Engager != null )
         {
-            Quaternion NewBaseRotation = GetTurretRotation();
-            Quaternion NewTurretAngle = GetGunRotation();
-
-            TurretBase.rotation = NewBaseRotation;
-            TurretGun.localRotation = NewTurretAngle;
-
-            if ( ReadyToEngage && Time.time >= ( LastEngageTime + EngagementParams.Cooldown ) )
+            if ( CacheEntityTarget && LookingAtTarget )
             {
-                ReadyToEngage = false;
-                Engager.Engage( CacheEntityTarget );
+                Quaternion NewBaseRotation = GetTurretRotation();
+                Quaternion NewTurretAngle = GetGunRotation();
+
+                TurretBase.rotation = NewBaseRotation;
+                TurretGun.localRotation = NewTurretAngle;
+
+                if ( ReadyToEngage && Time.time >= ( LastEngageTime + EngagementParams.Cooldown ) )
+                {
+                    ReadyToEngage = false;
+                    Engager.Engage( CacheEntityTarget );
+                }
             }
-        }
+        }       
     }
 
 }

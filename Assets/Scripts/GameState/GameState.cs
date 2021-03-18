@@ -7,6 +7,7 @@ public class GameState : MonoBehaviour
     private static GameState GameStateInstance;
     private GameService[] GameServices;
 
+    public static event DelegateUtils.VoidDelegateNoArgs onServicesLoaded;
     public static event DelegateUtils.VoidDelegateNoArgs onGameStateFinishedInitialisation;
 
 #if UNITY_EDITOR
@@ -14,7 +15,7 @@ public class GameState : MonoBehaviour
     private void OnValidate()
     {
         GameStateInstance = this;
-        LoadGameServices();
+        GameServices = GetComponents<GameService>();
     }
 #endif
 
@@ -22,7 +23,7 @@ public class GameState : MonoBehaviour
     {
         GameStateInstance = this;
         LoadGameServices();
-        StartCoroutine( FinishInitialization ());
+        StartCoroutine( FinishInitialization() );
     }
 
     private void LoadGameServices()
@@ -33,6 +34,7 @@ public class GameState : MonoBehaviour
         {
             Service.InitialiseGameService();
         }
+        onServicesLoaded();
     }
 
     private IEnumerator FinishInitialization()

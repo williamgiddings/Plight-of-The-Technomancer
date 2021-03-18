@@ -94,11 +94,11 @@ GameObject:
   - component: {fileID: 1650462496183510710}
   - component: {fileID: 1650462496183510697}
   - component: {fileID: -7095265086316870776}
-  - component: {fileID: 5571430707860983570}
   - component: {fileID: 1650462496183510708}
   - component: {fileID: 2448207727807121361}
   - component: {fileID: 2613003554911104465}
   - component: {fileID: 7709339784128243888}
+  - component: {fileID: 5162407351671889112}
   m_Layer: 10
   m_Name: FriendlyUnit
   m_TagString: Untagged
@@ -184,19 +184,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PerceptionParams: {fileID: 11400000, guid: 4a75f0aeab1a705499654f2e1b999fb6, type: 2}
---- !u!114 &5571430707860983570
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1650462496183510699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bbf946e0e1b0b744b5a5f5c66714c80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HealthParams: {fileID: 11400000, guid: cc19bfb121a8bb5498a24cafb1495a8f, type: 2}
 --- !u!114 &1650462496183510708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,8 +198,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllignedFaction: 1
   Type: 0
+  OnDestroyEffect: {fileID: 100010, guid: e0609132424a24844b1d53ad3d704fd9, type: 3}
   MuzzleLocations:
   - {fileID: 5197654944943725242}
+  EngagementParams: {fileID: 0}
   UnitNickName: 
   TurretBase: {fileID: 113240871561014298}
   TurretGun: {fileID: 59171653064251307}
@@ -260,9 +249,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9a092e15a677b43ba634e3ca458df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProjectileHitColourBindings:
+  - HitType: 0
+    HitColor: {r: 0.8584906, g: 0.49354053, b: 0, a: 0.27450982}
+  - HitType: 1
+    HitColor: {r: 0.8301887, g: 0.82312876, b: 0, a: 0.27450982}
+  - HitType: 2
+    HitColor: {r: 0.4425216, g: 0.019624414, b: 0.46226418, a: 0.27450982}
+  - HitType: 3
+    HitColor: {r: 0.7264151, g: 0, b: 0, a: 0.27450982}
   ShieldObject: {fileID: 4477861108573388964}
-  TestCamera: {fileID: 0}
   ColourHitReactSpeed: 0.35
+  Brightness: 4
+--- !u!114 &5162407351671889112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650462496183510699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 260fdb7b574e7db4fa10a6bc157973b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthParams: {fileID: 11400000, guid: cc19bfb121a8bb5498a24cafb1495a8f, type: 2}
 --- !u!1 &2481110872070030449
 GameObject:
   m_ObjectHideFlags: 0

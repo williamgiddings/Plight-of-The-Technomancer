@@ -33,7 +33,7 @@ public class AIUnitFactory
             Quaternion.LookRotation( (Position - SpawnOrigin).normalized, Vector3.up )
             );
         
-        Unit.Params = Params;
+        Unit.SetUnitParams(Params);
         Unit.SetEngagementParams( Params.EngagementParams );
 
         AssociatedWave.AddUnit( Unit );
