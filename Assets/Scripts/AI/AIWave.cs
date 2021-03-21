@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class AIWave
 {
-    public uint ID { get; }
+    public int ID { get; }
     public event DelegateUtils.VoidDelegateNoArgs onComplete;
     
     private List<AIEnemyUnit> ActiveEnemyUnits = new List<AIEnemyUnit>();
 
-    public AIWave( uint WaveIndex )
+    public AIWave( int WaveIndex )
     {
         ID = WaveIndex;
     }

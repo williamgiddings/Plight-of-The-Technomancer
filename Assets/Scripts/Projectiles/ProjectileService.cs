@@ -191,7 +191,7 @@ public class ProjectileService : GameService
             if ( ProjectileTypes.Value.ProjectileCollection.Count > 0)
             {
                 Projectile.ProjectileAppearanceData Appearance = ProjectileTypes.Value.ProjectileCollection[0].Appearance;
-                Graphics.DrawMeshInstanced( Appearance.ProjectileMesh, 0, Appearance.ProjectileMaterial, ProjectileTypes.Value.MatrixCollection );
+                Graphics.DrawMeshInstanced( Appearance.ProjectileMesh, 0, Appearance.ProjectileMaterial, ProjectileTypes.Value.MatrixCollection, null, UnityEngine.Rendering.ShadowCastingMode.Off, false, 10 );
             }
         }
     }

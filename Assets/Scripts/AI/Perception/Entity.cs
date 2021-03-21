@@ -15,8 +15,8 @@ public class Entity : MonoBehaviour
     public AIPerceptionService.Faction AllignedFaction;
     public EntityType Type;
 
-    public static DelegateUtils.VoidDelegateEntityArg onEntityDestroyed;
-    public static DelegateUtils.VoidDelegateEntityArg onEntityCreated;
+    public static event DelegateUtils.VoidDelegateEntityArg onEntityDestroyed;
+    public static event DelegateUtils.VoidDelegateEntityArg onEntityCreated;
     public GameObject OnDestroyEffect;
 
     protected Damageable DamageableComponent;
@@ -39,6 +39,11 @@ public class Entity : MonoBehaviour
         CacheCenterMass();
     }
 
+    public Damageable GetDamageableComponent()
+    {
+        return DamageableComponent;
+    }
+
     private void CacheCenterMass()
     {
         Rigidbody Rigid = GetComponent<Rigidbody>();
@@ -56,11 +61,6 @@ public class Entity : MonoBehaviour
     protected virtual void OnDestroy()
     {
         onEntityDestroyed( this );
-        
-        if ( OnDestroyEffect )
-        {
-            Instantiate( OnDestroyEffect, transform.position, Quaternion.identity );
-        }
     }
 
     public void Target()

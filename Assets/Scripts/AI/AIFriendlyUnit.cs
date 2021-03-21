@@ -79,6 +79,7 @@ public class AIFriendlyUnit : AIAgent
 
     protected override void OnDie()
     {
+        base.OnDie();
         onFriendlyUnitDestroyed( this );
     }
 

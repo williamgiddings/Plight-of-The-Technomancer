@@ -96,11 +96,6 @@ public class AIEnemyUnit : AIAgent
         return NewRotation;
     }
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy(); 
-    }
-
     public void SetAssociatedWave( AIWave InWave )
     {
         AssociatedWave = InWave;
@@ -129,6 +124,7 @@ public class AIEnemyUnit : AIAgent
 
     protected override void OnDie()
     {
+        base.OnDie();
         AssociatedWave.OnUnitDestroyed( this );
         Destroy( gameObject );
     }

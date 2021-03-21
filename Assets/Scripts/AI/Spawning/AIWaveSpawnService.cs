@@ -20,7 +20,7 @@ public class AIWaveSpawnService : GameService
     public event DelegateUtils.VoidDelegateFloatArg OnIntermissionUpdate;
 
     private AIWave CurrentWave;
-    private uint CurrentWaveIndex;
+    private int CurrentWaveIndex;
     private AISpawnService SpawnService;
     private AISurfaceProjectionService SurfaceProjectionService;
 
@@ -30,20 +30,12 @@ public class AIWaveSpawnService : GameService
         SpawnService = GameState.GetGameService<AISpawnService>();
         SurfaceProjectionService = GameState.GetGameService<AISurfaceProjectionService>();
         GameState.onGameStateFinishedInitialisation += onGameStateFinishedInitialisation;
-        CurrentWaveIndex = 0;
+        CurrentWaveIndex = -1;
     }
 
     private void onGameStateFinishedInitialisation()
     {
         StartIntermission( 10.0f );
-    }
-
-    private void Update()
-    {
-        if ( Input.GetKeyDown( KeyCode.F1 ) )
-        {
-            SpawnEnemyWave(0);
-        }
     }
 
     private void SpawnEnemyWave( uint WaveIndex )
@@ -125,12 +117,12 @@ public class AIWaveSpawnService : GameService
         float Tick = 1.0f;
         while( Duration > 0.0f )
         {
-            OnIntermissionUpdate( Duration );
+            if (OnIntermissionUpdate!=null) OnIntermissionUpdate( Duration );
             Duration -= Tick;
             yield return new WaitForSeconds( Tick );
         }
-        OnIntermissionUpdate( 0.0f );
-        StartNewWave(CurrentWaveIndex+1);
+        if ( OnIntermissionUpdate != null ) OnIntermissionUpdate( 0.0f );
+        AdvanceWave();
     }
 
     private void WaveComplete()
@@ -139,7 +131,7 @@ public class AIWaveSpawnService : GameService
         StartIntermission( 40.0f );
     }
 
-    private void StartNewWave( uint NewWaveIndex )
+    private void AdvanceWave()
     {
         CurrentWaveIndex++;
         SpawnEnemyWave( ( uint ) Mathf.Clamp( CurrentWaveIndex, 0, WaveFormations.Length - 1 ) );

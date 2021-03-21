@@ -52,9 +52,7 @@ public class SpawnRadar : MonoBehaviour
         }
         else
         {
-            TargetNormalisedPosition.Reset();
-            onSpawnCoordSelected( TargetNormalisedPosition );
-            Reticle.ResumeMovement();
+            ResetSelection();
         }
         UpdateCoordText();
     }
@@ -62,7 +60,8 @@ public class SpawnRadar : MonoBehaviour
     public void ResetSelection()
     {
         TargetNormalisedPosition.Reset();
-        UpdateCoordText();
+        onSpawnCoordSelected( TargetNormalisedPosition );
+        Reticle.ResumeMovement();
     }
 
     private void UpdateCoordText()

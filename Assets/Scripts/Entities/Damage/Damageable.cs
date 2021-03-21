@@ -55,7 +55,6 @@ public class Damageable : MonoBehaviour
 
             if ( Health <= 0 )
             {
-                Debug.Log( string.Format( "{0} was Destroyed by {1}'s {2}", gameObject.name, InDamage.GetDamageInstigator().name, InDamage.GetDamageType().ToString() ) );
                 OnHealthZero();
             }
             

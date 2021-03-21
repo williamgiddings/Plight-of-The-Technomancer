@@ -22,8 +22,6 @@ public class ResistingDamageable : Damageable
                 }
             }
         }
-        //remove
-        OnDamageResisted( InSource );
         return Source;
     }
 

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UsePopularityUnBiasing: 0
   TargetingTime: 0.5
-  MaxTargetingRange: 100
+  MaxTargetingRange: 75
   MaxTargetingAngle: 360
   Targetable: 0100000000000000
   RetargetThreshold: 1.2

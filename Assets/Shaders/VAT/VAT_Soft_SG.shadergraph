@@ -1334,7 +1334,7 @@
     },
     "m_Name": "VAT_Soft_SubGraph",
     "m_DrawState": {
-        "m_Expanded": true,
+        "m_Expanded": false,
         "m_Position": {
             "serializedVersion": "2",
             "x": -410.99993896484377,

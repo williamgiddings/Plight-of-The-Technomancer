@@ -31,6 +31,7 @@ public class AIUnitSpawnSelectionUI : MonoBehaviour
 
     [Header("UnitPreview")]
     public AIFriendlyUnitSelectedPreview SelectedUnitPreview;
+    public RectTransform NoLocationPreview;
 
     [Header("Selection")]
     public Button SpawnButton;
@@ -98,6 +99,7 @@ public class AIUnitSpawnSelectionUI : MonoBehaviour
     {
         UnitSpawnRequest.SelectedUnitPositionOptional = NewCoord;
         RefreshSelectionUI();
+        NoLocationPreview.gameObject.SetActive( !NewCoord );
     }
 
     public void SpawnSelectedUnit()
@@ -107,7 +109,7 @@ public class AIUnitSpawnSelectionUI : MonoBehaviour
             if ( SpawnService.TrySpawnFriendlyUnit( UnitSpawnRequest.SelectedUnitOptional.Get(), UnitSpawnRequest.SelectedUnitPositionOptional.Get() ) )
             {
                 NewUnitSelected( null );
-                NewSpawnCoordSelected( null );
+                SpawnRadarSystem.ResetSelection();
             }
         }
     }

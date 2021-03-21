@@ -110,6 +110,9 @@ public class AIAgent : Entity
 
     protected virtual void OnDie()
     {
-
+        if ( OnDestroyEffect )
+        {
+            Instantiate( OnDestroyEffect, transform.position, Quaternion.identity );
+        }
     }
 }
