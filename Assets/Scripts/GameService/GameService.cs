@@ -8,6 +8,13 @@ public class GameService : MonoBehaviour
 
     protected virtual void Begin()
     {
+        Debug.Log( string.Format( "{0} initialised", GameServiceInstance ) );
+    }
+
+    protected virtual void OnDestroy()
+    {
+        GameState.onServicesLoaded -= Begin;
+        GameServiceInstance = null;
     }
 
     public void InitialiseGameService()

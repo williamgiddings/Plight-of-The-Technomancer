@@ -118,4 +118,10 @@ public class AISpawnService : GameService
         return ref FriendlySpawnableUnits.CraftableUnitTypes;
     }
 
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        FabricatingUnitTimerObject.onTimerCompleted -= onUnitFinishedFabricating;
+    }
 }

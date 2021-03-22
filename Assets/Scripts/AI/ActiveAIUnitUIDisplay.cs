@@ -11,9 +11,12 @@ public class ActiveAIUnitUIDisplay : MonoBehaviour
 
     public StatOverviewContainer StatOverview;
 
+    private Damageable CachedDamageableRef;
+
     public void Bind( ref AIFriendlyUnit Unit )
     {
-        Unit.GetDamageableComponent().OnNormalisedHealthChange += FriendlyUnitNormalisedHealthChange;
+        CachedDamageableRef = Unit.GetDamageableComponent();
+        CachedDamageableRef.OnNormalisedHealthChange += FriendlyUnitNormalisedHealthChange;
         UnitNickName.SetText( string.Format( "{0}", Unit.UnitNickName ) );
 
         if ( StatOverview != null )
@@ -26,13 +29,17 @@ public class ActiveAIUnitUIDisplay : MonoBehaviour
                 {
                     StatOverview.AddStat( PositiveStat );
                 }
-            }
-            
+            }         
         }
     }
 
     private void FriendlyUnitNormalisedHealthChange( float NewNormalisedHealth )
     {
         UnitHealthbar.fillAmount = NewNormalisedHealth;
+    }
+
+    private void OnDestroy()
+    {
+        CachedDamageableRef.OnNormalisedHealthChange -= FriendlyUnitNormalisedHealthChange;
     }
 }

@@ -41,4 +41,10 @@ public class AINamingService : GameService
     {
         UnreserveName( Unit.UnitNickName );
     }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        AIFriendlyUnit.onFriendlyUnitDestroyed -= NamedUnitDestroyed;
+    }
 }

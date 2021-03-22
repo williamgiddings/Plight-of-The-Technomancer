@@ -4,26 +4,25 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
-    private static GameState GameStateInstance;
+    private static GameState Instance;
     private GameService[] GameServices;
 
     public static event DelegateUtils.VoidDelegateNoArgs onServicesLoaded;
     public static event DelegateUtils.VoidDelegateNoArgs onGameStateFinishedInitialisation;
 
-#if UNITY_EDITOR
-    [ExecuteInEditMode]
-    private void OnValidate()
-    {
-        GameStateInstance = this;
-        GameServices = GetComponents<GameService>();
-    }
-#endif
-
     private void Start()
     {
-        GameStateInstance = this;
+        if ( !Instance )
+        {
+            Instance = this;
+        }
         LoadGameServices();
         StartCoroutine( FinishInitialization() );
+    }
+
+    private void OnDestroy()
+    {
+        Instance = null;
     }
 
     private void LoadGameServices()
@@ -45,9 +44,9 @@ public class GameState : MonoBehaviour
 
     public static Service GetGameService<Service>() where Service : GameService
     {
-        if ( GameStateInstance )
+        if ( Instance )
         {
-            foreach ( GameService ServiceInstance in GameStateInstance.GameServices )
+            foreach ( GameService ServiceInstance in Instance.GameServices )
             {
                 Service CastedService = ServiceInstance.GetService() as Service;
                 if ( CastedService )
@@ -62,9 +61,9 @@ public class GameState : MonoBehaviour
     public static bool TryGetGameService<Service>( out Service OutService ) where Service : GameService
     {
         OutService = null;
-        if ( GameStateInstance )
+        if ( Instance )
         {
-            foreach ( GameService ServiceInstance in GameStateInstance.GameServices )
+            foreach ( GameService ServiceInstance in Instance.GameServices )
             {
                 Service CastedService = ServiceInstance.GetService() as Service;
                 if ( CastedService )

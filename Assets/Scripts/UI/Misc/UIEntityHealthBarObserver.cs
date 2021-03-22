@@ -26,4 +26,13 @@ public class UIEntityHealthBarObserver : MonoBehaviour
         HealthBar.fillAmount = Value;
     }
 
+    private void OnDestroy()
+    {
+        Entity.onEntityCreated -= EntityCreated;
+
+        if ( EntityReference )
+        {
+            EntityReference.GetDamageableComponent().OnNormalisedHealthChange -= UpdateHealthBar;
+        }
+    }
 }

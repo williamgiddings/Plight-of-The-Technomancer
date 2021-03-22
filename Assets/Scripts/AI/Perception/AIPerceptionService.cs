@@ -158,4 +158,11 @@ public class AIPerceptionService : GameService
             TickAggregator.Update();
         }
     }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Entity.onEntityCreated -= EntityCreated;
+        Entity.onEntityDestroyed -= EntityDestroyed;
+    }
 }

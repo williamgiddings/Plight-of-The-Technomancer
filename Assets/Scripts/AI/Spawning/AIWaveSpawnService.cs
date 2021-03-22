@@ -138,4 +138,14 @@ public class AIWaveSpawnService : GameService
         OnWaveBegin( CurrentWave );
         Debug.Log( string.Format( "Wave {0} Started", CurrentWaveIndex ) );
     }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        if ( CurrentWave != null )
+        {
+            CurrentWave.onComplete -= WaveComplete;
+        }
+        GameState.onGameStateFinishedInitialisation -= onGameStateFinishedInitialisation;
+    }
 }

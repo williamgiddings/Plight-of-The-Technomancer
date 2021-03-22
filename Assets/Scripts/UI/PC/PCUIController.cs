@@ -50,4 +50,19 @@ public class PCUIController : MonoBehaviour
         WaveText.Element.SetText(string.Format("Wave #{0}", NewWave.ID+1 ));
         WaveText.Show();
     }
+
+    private void OnDestroy()
+    {
+        if ( GameState.TryGetGameService<AIWaveSpawnService>( out AIWaveSpawnService WaveService ) )
+        {
+            WaveService.OnWaveBegin -= WaveServiceOnWaveBegin;
+            WaveService.OnWaveEnd -= WaveServiceOnWaveEnd;
+            WaveService.OnIntermissionStart -= WaveServiceOnIntermissionStart;
+            WaveService.OnIntermissionUpdate -= WaveServiceOnIntermissionUpdate;
+        }
+
+        WaveText.SafeDestroy();
+        IntermissionText.SafeDestroy();
+        WavePopupText.SafeDestroy();
+    }
 }

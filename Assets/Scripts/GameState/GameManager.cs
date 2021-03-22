@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public enum GameModeType
 {
@@ -10,20 +11,23 @@ public enum GameModeType
     Coop
 }
 
-public class GameManager : MonoBehaviour
+public enum GameResult
+{
+    Fail,
+    Success,
+    Quit
+}
+
+public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
     private GameModeType CurrentGameMode;
-
-    public Button SinglePlayerButton;
-    public Button CoopButton;
+    [SerializeField]
+    private GameResult CurrentGameResult;
 
     private void Awake()
     {
-        DontDestroyOnLoad( this.gameObject );
         SceneManager.sceneLoaded += OnSceneLoad;
-        CoopButton.onClick.AddListener( () => StartGame( GameModeType.Coop ) );
-        SinglePlayerButton.onClick.AddListener( () => StartGame(GameModeType.SinglePlayer) );
     }
 
     private void UpdateGameModeToggles()
@@ -34,14 +38,41 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartGame( GameModeType Mode )
-    {
-        CurrentGameMode = Mode;
-        SceneManager.LoadScene( 1 );
-    }
-
     private void OnSceneLoad( Scene NewScene, LoadSceneMode Args )
     {
         UpdateGameModeToggles();
     }
+
+    public static GameModeType GetCurrentGameMode()
+    {
+        return Instance.CurrentGameMode;
+    }
+
+    public static GameResult GetGameResult()
+    {
+        return Instance.CurrentGameResult;
+    }
+
+    public static void ReturnToMenu()
+    {
+        SceneManager.LoadScene( 0 );
+    }
+
+    public static void EndGame( GameResult Result )
+    {
+        Instance.CurrentGameResult = Result;
+        SceneManager.LoadScene( 2 );
+    }
+
+    public static void StartGame( GameModeType Mode )
+    {
+        Instance.CurrentGameMode = Mode;
+        SceneManager.LoadScene( 1 );
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoad;
+    }
+
 }

@@ -53,4 +53,13 @@ public class BeaconLight : MonoBehaviour
             SpinningLightContainer.Rotate( new Vector3(0,0,1), Time.deltaTime * BeaconSpinSpeed ); ;
         }
     }
+
+    private void OnDestroy()
+    {
+        if ( GameState.TryGetGameService<AIWaveSpawnService>( out AIWaveSpawnService WaveService ) )
+        {
+            WaveService.OnWaveBegin -= EnableBeaconLight;
+            WaveService.OnWaveEnd -= DisableBeaconLight;
+        }
+    }
 }

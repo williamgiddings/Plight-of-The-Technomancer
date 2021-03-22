@@ -82,4 +82,10 @@ public class UnitFabricationUI : MonoBehaviour
         NewTextObject.SetText( InTimer.Unit.UnitName );
         FabricationTextPlaceholders.Add( InTimer, NewTextObject );
     }
+
+    private void OnDestroy()
+    {
+        CraftableUnitDisplay.onCraftableUnitSelected -= onTryFabricatingUnit;
+        FabricatingUnitTimerObject.onTimerCompleted -= onFabricationTimerComplete;
+    }
 }

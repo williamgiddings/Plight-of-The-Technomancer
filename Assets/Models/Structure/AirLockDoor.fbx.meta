@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 0d2acf884a850c046bb3a767896f72fb
 ModelImporter:
-  serializedVersion: 20101
+  serializedVersion: 20200
   internalIDToNameTable: []
   externalObjects:
   - first:
@@ -9,6 +9,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_AirLockDoor
     second: {fileID: 2100000, guid: d0d6694d4808dcb439a43dac05f74577, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_AirLockEmissive
+    second: {fileID: 2100000, guid: f770cdf51ab818c428c35b7af815d723, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -50,7 +55,7 @@ ModelImporter:
     importLights: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
@@ -100,6 +105,7 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

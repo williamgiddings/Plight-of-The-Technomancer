@@ -83,7 +83,7 @@ Material:
     - _Alpha: 1
     - _AlphaClip: 0
     - _Blend: 0
-    - _Brightness: 1.2
+    - _Brightness: 1.1
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -99,8 +99,8 @@ Material:
     - _Fold: 1
     - _Fresnel: 15.1
     - _FresnelWidth: 1.787
-    - _GlitchIntensity: 0.2
-    - _GlitchSpeed: 6
+    - _GlitchIntensity: 5
+    - _GlitchSpeed: 50
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0

@@ -21,10 +21,10 @@ Properties
     _RimColor("Rim Color", Color) = (1,1,1,1)
     _RimPower("Rim Power", Range(0.1, 10)) = 5.0
     // Scanline
-    _ScanTiling("Scan Tiling", Range(0.01, 10.0)) = 0.05
+    _ScanTiling("Scan Tiling", Range(0.01, 100.0)) = 0.05
     _ScanSpeed("Scan Speed", Range(-2.0, 2.0)) = 1.0
     // Glow
-    _GlowTiling("Glow Tiling", Range(0.01, 1.0)) = 0.05
+    _GlowTiling("Glow Tiling", Range(0.01, 10.0)) = 0.05
     _GlowSpeed("Glow Speed", Range(-10.0, 10.0)) = 1.0
     // Glitch
     _GlitchSpeed("Glitch Speed", Range(0, 50)) = 1.0
@@ -130,6 +130,9 @@ SubShader
                 v2f OUT;
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+
+                v.vertex.x += _GlitchIntensity * (step(0.5, sin(_Time.y * 2.0 + v.vertex.y * 1.0)) * step(0.99, sin(_Time.y * _GlitchSpeed * 0.5)));
+
                 OUT.worldPosition = v.vertex;
                 OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
                 OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);

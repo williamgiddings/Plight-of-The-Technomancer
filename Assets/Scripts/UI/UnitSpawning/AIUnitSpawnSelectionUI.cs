@@ -69,6 +69,21 @@ public class AIUnitSpawnSelectionUI : MonoBehaviour
         FabricatingUnitTimerObject.onTimerStarted += onUnitStartedFabricating;
     }
 
+    private void UnRegisterEvents()
+    {
+        SpawnService = GameState.GetGameService<AISpawnService>();
+        if ( SpawnService )
+        {
+            SpawnService.onNewFriendlyUnitAvailible -= AddSpawnableUnit;
+            SpawnService.onFriendlyUnitNotAvailible -= RemoveSpawnableUnit;
+        }
+        SpawnableUnitDisplay.onSpawnableUnitSelected -= NewUnitSelected;
+        SpawnRadar.onSpawnCoordSelected -= NewSpawnCoordSelected;
+
+        FabricatingUnitTimerObject.onTimerCompleted -= onUnitFinishedFabricating;
+        FabricatingUnitTimerObject.onTimerStarted -= onUnitStartedFabricating;
+    }
+
     public void onUnitStartedFabricating( FabricatingUnitTimerObject FabricatingTimer )
     {
         UnitFabricatingUIPlaceholderPreview NewFabricationPlaceholder = Instantiate( FabricationPlaceholder, UnitOptionContent );
@@ -167,6 +182,11 @@ public class AIUnitSpawnSelectionUI : MonoBehaviour
         SpawnButton.interactable = UnitSpawnRequest;
         SelectedUnitPreview.SetActive( UnitSelected );
 
+    }
+
+    private void OnDestroy()
+    {
+        UnRegisterEvents();
     }
 
 }

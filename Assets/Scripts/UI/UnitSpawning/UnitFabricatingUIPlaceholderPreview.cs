@@ -19,6 +19,7 @@ public class UnitFabricatingUIPlaceholderPreview : MonoBehaviour
         MaxTime = InMaxTime;
         InFabricationTimer.onTimerIntervalUpdated += onFabricatingUnitTimeUpdated;
         UnitTypeText.SetText( InFabricationTimer.Unit.UnitName );
+        FabricationTimer = InFabricationTimer;
     }
 
     void onFabricatingUnitTimeUpdated( float NewTime )
@@ -33,4 +34,8 @@ public class UnitFabricatingUIPlaceholderPreview : MonoBehaviour
         TimeRemainingProgressBar.fillAmount = TimeRemaining / MaxTime;
     }
 
+    private void OnDestroy()
+    {
+        FabricationTimer.onTimerIntervalUpdated -= onFabricatingUnitTimeUpdated;
+    }
 }

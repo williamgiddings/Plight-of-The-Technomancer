@@ -231,7 +231,7 @@ public class AIPerceptionComponent : MonoBehaviour
     {
         if ( DestroyedEntity == CurrentTarget )
         {
-            onTargetLost();
+            if ( onTargetLost != null ) onTargetLost();
         }
     }
 }

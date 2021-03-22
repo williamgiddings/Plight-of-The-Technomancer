@@ -59,6 +59,26 @@ public class AIAgent : Entity
         DamageableComponent.OnHealthZero += OnDie;
     }
 
+    protected void UnRegisterEvents()
+    {
+        if ( PerceptionComponent )
+        {
+            PerceptionComponent.onTargetAquired -= OnPerceptionTargetAquired;
+            PerceptionComponent.onTargetLost -= OnPerceptionTargetLost;
+        }
+
+        if ( Engager != null )
+        {
+            Engager.onBarrageFinished -= delegate ( float TimeFinished )
+            {
+                LastEngageTime = TimeFinished;
+                ReadyToEngage = true;
+            };
+        }
+
+        DamageableComponent.OnHealthZero -= OnDie;
+    }
+
     protected virtual void LookAtTarget()
     {
 
@@ -77,11 +97,12 @@ public class AIAgent : Entity
 
     protected override void OnDestroy()
     {
-        base.OnDestroy();
         for ( int ChildIndex = 0; ChildIndex < transform.childCount; ChildIndex++ )
         {
             transform.GetChild( ChildIndex ).DOKill();
         }
+        UnRegisterEvents();
+        base.OnDestroy();
     }
 
     public Damageable GetDamageableComponent()
@@ -101,11 +122,6 @@ public class AIAgent : Entity
     public void SetDestination( Vector3 InDestination )
     {
         Destination = InDestination;
-    }
-
-    void FinishedEngaging( float TimeStamp )
-    {
-
     }
 
     protected virtual void OnDie()

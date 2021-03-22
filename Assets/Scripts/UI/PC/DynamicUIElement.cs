@@ -14,12 +14,18 @@ public class DynamicUIElement<Type> where Type : ICanvasElement
 
     public void Show()
     {
-        Element.transform.DOLocalMove( ShowPosition, MoveSpeed );
+        if ( !Element.IsDestroyed() )
+        {
+            Element.transform.DOLocalMove( ShowPosition, MoveSpeed );
+        }
     }
 
     public void Hide()
     {
-        Element.transform.DOLocalMove( HidePosition, MoveSpeed );
+        if ( !Element.IsDestroyed() )
+        {
+            Element.transform.DOLocalMove( HidePosition, MoveSpeed );
+        }
     }
 
     public void TextFadeInOut()
@@ -31,5 +37,10 @@ public class DynamicUIElement<Type> where Type : ICanvasElement
             Seq.Append( ElementAsText.DOFade( 1.0f, BlendSpeed ) );
             Seq.Append( ElementAsText.DOFade( 0.0f, BlendSpeed ) );
         }
+    }
+
+    public void SafeDestroy()
+    {
+        Element.transform.DOKill();
     }
 }

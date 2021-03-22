@@ -84,8 +84,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Alpha: 1
-    - _Brightness: 1.91
+    - _Alpha: 0.165
+    - _Brightness: 2.75
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -94,8 +94,8 @@ Material:
     - _FlickerSpeed: 100
     - _Fold: 63
     - _Glitch: 1
-    - _GlitchIntensity: 0
-    - _GlitchSpeed: 0
+    - _GlitchIntensity: 0.01
+    - _GlitchSpeed: 50
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -110,7 +110,7 @@ Material:
     - _RimPower: 1.69
     - _RimStrength: 2.5
     - _ScanSpeed: 0.11
-    - _ScanTiling: 10
+    - _ScanTiling: 92.3
     - _Scanline: 0
     - _ScanlineSize: 1
     - _ScanlineSpeed: 2

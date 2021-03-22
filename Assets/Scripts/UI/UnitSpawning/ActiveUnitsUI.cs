@@ -17,10 +17,13 @@ public class ActiveUnitsUI : MonoBehaviour
 
     private void AddSpawnedUnit( AIFriendlyUnit Unit )
     {
-        ActiveAIUnitUIDisplay NewInstance = Instantiate( ActiveUnitTemplate, Grid.transform );
-        NewInstance.Bind( ref Unit );
-        ActiveUIs.Add( Unit, NewInstance );
-        NewInstance.gameObject.SetActive(true);
+        if ( Grid )
+        {
+            ActiveAIUnitUIDisplay NewInstance = Instantiate( ActiveUnitTemplate, Grid.transform );
+            NewInstance.Bind( ref Unit );
+            ActiveUIs.Add( Unit, NewInstance );
+            NewInstance.gameObject.SetActive( true );
+        }
     }
 
     private void RemoveSpawnedUnit( AIFriendlyUnit Unit )
@@ -30,5 +33,11 @@ public class ActiveUnitsUI : MonoBehaviour
             ActiveUIs.Remove( Unit );
             Destroy( UIInstance.gameObject );
         }
+    }
+
+    private void OnDestroy()
+    {
+        AIFriendlyUnit.onFriendlyUnitSpawned -= AddSpawnedUnit;
+        AIFriendlyUnit.onFriendlyUnitDestroyed -= RemoveSpawnedUnit;
     }
 }

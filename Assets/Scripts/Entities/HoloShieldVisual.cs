@@ -58,4 +58,12 @@ public class HoloShieldVisual : MonoBehaviour
     {
         ShieldObject.transform.rotation = Quaternion.LookRotation( HitDirection, Vector3.up );
     }
+
+    private void OnDestroy()
+    {
+        if ( DamageableComponent )
+        {
+            DamageableComponent.OnDamageResisted -= HitShield;
+        }
+    }
 }
