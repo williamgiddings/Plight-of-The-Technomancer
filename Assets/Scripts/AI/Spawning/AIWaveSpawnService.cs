@@ -16,8 +16,8 @@ public class AIWaveSpawnService : GameService
     //Events
     public event AIDelegates.AIWaveDelegate OnWaveBegin;
     public event AIDelegates.AIWaveDelegate OnWaveEnd;
-    public event DelegateUtils.VoidDelegateFloatArg OnIntermissionStart;
-    public event DelegateUtils.VoidDelegateFloatArg OnIntermissionUpdate;
+    public event DelegateUtils.VoidDelegateGenericArg<float> OnIntermissionStart;
+    public event DelegateUtils.VoidDelegateGenericArg<float> OnIntermissionUpdate;
 
     private AIWave CurrentWave;
     private int CurrentWaveIndex;
@@ -38,6 +38,19 @@ public class AIWaveSpawnService : GameService
         StartIntermission( 10.0f );
     }
 
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            if ( CurrentWave != null )
+            {
+                CurrentWave.TearDown();
+            }
+        }
+    }
+#endif
+
     private void SpawnEnemyWave( uint WaveIndex )
     {
         if ( CurrentWave != null )
@@ -52,6 +65,7 @@ public class AIWaveSpawnService : GameService
         List<AIEnemyUnitTypes> AvailableUnitTypes = GetNUnitTypes(SelectedWave.NumUnitTypes);
 
         int NumUnitsToSpawn = Random.Range( SelectedWave.MinUnitsInWave, SelectedWave.MaxUnitsInWave );
+        NumUnitsToSpawn = Mathf.CeilToInt( NumUnitsToSpawn * GameState.GetDifficulty() ); //Adjust for gamemode difficulty
         float SpawnAngle = Random.Range( 0f, 360.0f );
 
         for ( int i = 0; i < NumUnitsToSpawn; i++ )
@@ -88,7 +102,7 @@ public class AIWaveSpawnService : GameService
         {
             for ( int i = 0; i < N; i++ )
             {
-                Types.Add( UnitTypes[Random.Range( 0, UnitTypes.Count - 1 )].Type );
+                Types.Add( UnitTypes[Random.Range( 0, UnitTypes.Count )].Type );
             }
         }
         return Types;
@@ -127,16 +141,22 @@ public class AIWaveSpawnService : GameService
 
     private void WaveComplete()
     {
-        OnWaveEnd( CurrentWave );
-        StartIntermission( 40.0f );
+        if ( CurrentWaveIndex <= WaveFormations.Length - 1 )
+        {
+            OnWaveEnd( CurrentWave );
+            StartIntermission( 40.0f );
+        }
+        else
+        {
+            GameManager.EndGame( GameResult.Success );
+        }
     }
 
     private void AdvanceWave()
     {
         CurrentWaveIndex++;
-        SpawnEnemyWave( ( uint ) Mathf.Clamp( CurrentWaveIndex, 0, WaveFormations.Length - 1 ) );
+        SpawnEnemyWave( ( uint ) CurrentWaveIndex );
         OnWaveBegin( CurrentWave );
-        Debug.Log( string.Format( "Wave {0} Started", CurrentWaveIndex ) );
     }
 
     protected override void OnDestroy()

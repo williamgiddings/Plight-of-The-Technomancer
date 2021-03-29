@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AIEngager
 {
-    public event DelegateUtils.VoidDelegateFloatArg onBarrageFinished;
+    public event DelegateUtils.VoidDelegateGenericArg<float> onBarrageFinished;
     
     private Entity Owner;
     private ProjectileService ProjectileServiceInstance;
@@ -13,14 +13,17 @@ public class AIEngager
 
     private int ShotsRemainingInBarrage = 0;
     private float CumulativeShotDelay = 0.0f;
+    private float DamageOverride = 1.0f;
 
-    public AIEngager( Entity InOwner, List<AIEngagementParams.BarrageParams> InBarrageParams, ref Transform[] InMuzzles )
+    public AIEngager( Entity InOwner, List<AIEngagementParams.BarrageParams> InBarrageParams, ref Transform[] InMuzzles, float InDamageOverride = 1.0f )
     {
         Owner = InOwner;
         ProjectileServiceInstance = GameState.GetGameService<ProjectileService>();
         BarrageParams = InBarrageParams;
         Muzzles = InMuzzles;
+        DamageOverride = InDamageOverride;
     }
+
 
     public void Engage( Entity Target )
     {
@@ -38,9 +41,12 @@ public class AIEngager
         {
             CumulativeShotDelay += Delay;
             yield return new WaitForSeconds( CumulativeShotDelay );
-
         }
-        ProjectileServiceInstance.CreateProjectile( Owner.gameObject, Type, Target, MuzzlePosition );
+        Projectile NewProjectile = ProjectileServiceInstance.CreateProjectile( Owner.gameObject, Type, Target, MuzzlePosition );
+        if ( NewProjectile != null )
+        {
+            NewProjectile.ProjectileDamage *= DamageOverride;
+        }
         OnShotFired();
     }
 

@@ -6,9 +6,26 @@ public class GameState : MonoBehaviour
 {
     private static GameState Instance;
     private GameService[] GameServices;
+    [SerializeField]
+    private GameModeDifficultyScalarBinding[] GameModeDifficulties;
 
     public static event DelegateUtils.VoidDelegateNoArgs onServicesLoaded;
     public static event DelegateUtils.VoidDelegateNoArgs onGameStateFinishedInitialisation;
+
+    [System.Serializable]
+    private struct GameModeDifficultyScalarBinding
+    {
+        public GameModeType Mode;
+        public float DifficultyScalar;
+    }
+
+    private void OnValidate()
+    {
+        if ( !Instance )
+        {
+            Instance = this;
+        }
+    }
 
     private void Start()
     {
@@ -58,6 +75,18 @@ public class GameState : MonoBehaviour
         return null;
     }
 
+    public static float GetDifficulty()
+    {
+        foreach ( GameModeDifficultyScalarBinding Binding in Instance.GameModeDifficulties )
+        {
+            if ( Binding.Mode == GameManager.GetCurrentGameMode() )
+            {
+                return Binding.DifficultyScalar;
+            }
+        }
+        return 1.0f;
+    }
+
     public static bool TryGetGameService<Service>( out Service OutService ) where Service : GameService
     {
         OutService = null;
@@ -75,4 +104,27 @@ public class GameState : MonoBehaviour
         }
         return false;
     }
+
+
+    [ExecuteInEditMode]
+    public static bool TryGetGameServiceEditor<Service>( out Service OutService ) where Service : GameService
+    {
+        OutService = null;
+        #if UNITY_EDITOR
+        if ( Instance )
+        {
+            foreach( GameService LocalService in Instance.GetComponentsInChildren<GameService>() )
+            {
+                Service LocalServiceAsService = LocalService as Service;
+                if ( LocalServiceAsService )
+                {
+                    OutService = LocalServiceAsService;
+                    return true;
+                }
+            }
+        }
+        #endif
+        return false;
+    }
+
 }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CraftableUnitTypes:
   - Data:
-      UnitName: Light Fire Resistant
+      UnitName: Fire Resistant
       Resistances:
         HeatResistance: 1
         KineticResistance: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
     FabricationCost: 2
     FabricationTime: 5
   - Data:
-      UnitName: Light Arc Resistant
+      UnitName: Arc Resistant
       Resistances:
         HeatResistance: 0
         KineticResistance: 0
@@ -40,7 +40,7 @@ MonoBehaviour:
     FabricationCost: 2
     FabricationTime: 5
   - Data:
-      UnitName: Light Kinetic Resistant
+      UnitName: Kinetic Resistant
       Resistances:
         HeatResistance: 0
         KineticResistance: 1
@@ -53,7 +53,7 @@ MonoBehaviour:
     FabricationCost: 2
     FabricationTime: 5
   - Data:
-      UnitName: Light Blast Resistant
+      UnitName: Blast Resistant
       Resistances:
         HeatResistance: 0
         KineticResistance: 0

@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class GameService : MonoBehaviour
 {
-    private GameService GameServiceInstance;
+    protected GameService GameServiceInstance;
 
     protected virtual void Begin()
     {
-        Debug.Log( string.Format( "{0} initialised", GameServiceInstance ) );
     }
 
     protected virtual void OnDestroy()

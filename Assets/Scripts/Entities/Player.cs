@@ -30,12 +30,4 @@ public class Player : Entity
             DamageableComponent.OnHealthZero -= OnDie;
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            OnDie();
-        }
-    }
 }

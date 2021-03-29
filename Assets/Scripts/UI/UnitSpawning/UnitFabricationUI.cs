@@ -11,20 +11,32 @@ public class UnitFabricationUI : MonoBehaviour
     public CraftableUnitDisplay CraftableUnitUITemplate;
     public VerticalLayoutGroup FabricationTextContainer;
     public TextMeshProUGUI FabricationTextTemplate;
+    public TextMeshProUGUI ScrapAmountText;
 
     private List<FabricatingUnitTimerObject> UnitsFabricating = new List<FabricatingUnitTimerObject>();
     private List<CraftableUnitDisplay> CraftableUnitDisplays = new List<CraftableUnitDisplay>();
     private Dictionary<FabricatingUnitTimerObject, TextMeshProUGUI> FabricationTextPlaceholders = new Dictionary<FabricatingUnitTimerObject, TextMeshProUGUI>();
 
     private AISpawnService SpawnService;
+    private ScrapService ScrapServiceInstance;
 
     private void Start()
     {
-        CraftableUnitDisplay.onCraftableUnitSelected += onTryFabricatingUnit;
-        FabricatingUnitTimerObject.onTimerCompleted += onFabricationTimerComplete;
+        CraftableUnitDisplay.onCraftableUnitSelected += OnTryFabricatingUnit;
+        FabricatingUnitTimerObject.onTimerCompleted += OnFabricationTimerComplete;
+        ScrapService.OnScrapUpdated += OnScrapServiceScrapUpdated;
 
         SpawnService = GameState.GetGameService<AISpawnService>();
+        ScrapServiceInstance = GameState.GetGameService<ScrapService>();
+
+        OnScrapServiceScrapUpdated(ScrapServiceInstance.GetScrapCount());
+
         PopulateCraftableUnits();
+    }
+
+    private void OnScrapServiceScrapUpdated( int NewScrapAmount )
+    {
+        ScrapAmountText.SetText( string.Format( "x{0}", NewScrapAmount ) );
     }
 
     private void Update()
@@ -55,7 +67,7 @@ public class UnitFabricationUI : MonoBehaviour
         CraftableUnitDisplays = new List<CraftableUnitDisplay>( NewSize );
     }
 
-    void onFabricationTimerComplete( FabricatingUnitTimerObject Timer )
+    void OnFabricationTimerComplete( FabricatingUnitTimerObject Timer )
     {
         UnitsFabricating.Remove( Timer );
 
@@ -67,12 +79,17 @@ public class UnitFabricationUI : MonoBehaviour
         }
     }
 
-    public void onTryFabricatingUnit( CraftableUnit Unit )
+    public void OnTryFabricatingUnit( CraftableUnit Unit )
     {
-        // if ( Unit.FabricationCost <= SCRAP )
-        FabricatingUnitTimerObject Timer = new FabricatingUnitTimerObject( Unit.Data, Unit.FabricationTime );
-        UnitsFabricating.Add( Timer );
-        CreateNewFabricationTextPlaceholder( Timer );
+        if ( ScrapServiceInstance )
+        {
+            if ( ScrapServiceInstance.TryRemoveScrap( Unit.FabricationCost ) )
+            {
+                FabricatingUnitTimerObject Timer = new FabricatingUnitTimerObject( Unit.Data, Unit.FabricationTime );
+                UnitsFabricating.Add( Timer );
+                CreateNewFabricationTextPlaceholder( Timer );
+            }
+        }
     }
 
     private void CreateNewFabricationTextPlaceholder( FabricatingUnitTimerObject InTimer )
@@ -85,7 +102,8 @@ public class UnitFabricationUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        CraftableUnitDisplay.onCraftableUnitSelected -= onTryFabricatingUnit;
-        FabricatingUnitTimerObject.onTimerCompleted -= onFabricationTimerComplete;
+        CraftableUnitDisplay.onCraftableUnitSelected -= OnTryFabricatingUnit;
+        FabricatingUnitTimerObject.onTimerCompleted -= OnFabricationTimerComplete;
+        ScrapService.OnScrapUpdated -= OnScrapServiceScrapUpdated;
     }
 }

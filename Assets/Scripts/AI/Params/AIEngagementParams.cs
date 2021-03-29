@@ -16,15 +16,12 @@ public class AIEngagementParams : ScriptableObject
     public float Cooldown;
     public List<BarrageParams> BarragesPerEngagement = new List<BarrageParams>();
 
-    [SerializeField]
-    private float DamagePerSecond;
-
-    [ExecuteInEditMode]
-    private void OnValidate()
+    public float GetDamagePerSecond()
     {
         float TotalDamage = 0.0f;
         float TotalTime = 0.0f;
-        if ( GameState.TryGetGameService<ProjectileService>( out ProjectileService ProjectileServiceRef ) )
+
+        if ( GameState.TryGetGameServiceEditor( out ProjectileService ProjectileServiceRef ) )
         {
             foreach ( BarrageParams Shot in BarragesPerEngagement )
             {
@@ -34,7 +31,6 @@ public class AIEngagementParams : ScriptableObject
             }
             TotalTime += Cooldown;
         }
-        DamagePerSecond = TotalDamage / TotalTime;
+        return TotalDamage / TotalTime;
     }
-
 }

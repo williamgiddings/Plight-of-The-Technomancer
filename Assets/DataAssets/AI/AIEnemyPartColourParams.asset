@@ -20,9 +20,6 @@ MonoBehaviour:
     - AccumulatedWeight: 0.8
       Object: 3
       Weight: 0.25
-    - AccumulatedWeight: 1
-      Object: 4
-      Weight: 0.1
   AvailableColours:
   - Colour: {r: 0, g: 0.5377358, b: 0.5377358, a: 0}
     ColourName: blue

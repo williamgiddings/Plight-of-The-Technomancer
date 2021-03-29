@@ -24,24 +24,28 @@ Shader "SFHologram/HologramShader"
 		// Alpha Flicker
 		_FlickerTex("Flicker Control Texture", 2D) = "white" {}
 		_FlickerSpeed("Flicker Speed", Range(0.01, 100)) = 1.0
+		
+		//Speeeen
+		_SpinSpeed("Rotate Speed", Range(0, 100)) = 0.0
+		
+		//Bob
+		_BobSpeed("Bob Speed", Range(0, 100)) = 0.0
+		_BobAmount("Bob Amount", Range(0, 100)) = 0.0
 
-				// Settings
+		// Settings
 		[HideInInspector] _Fold("__fld", Float) = 1.0
 	}
 		SubShader
 			{
 				Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
 				Blend SrcAlpha OneMinusSrcAlpha
-				LOD 100
+				LOD 200
 				ColorMask RGB
 				Cull Back
 
 				Pass
 				{
 					CGPROGRAM
-					#pragma shader_feature _SCAN_ON
-					#pragma shader_feature _GLOW_ON
-					#pragma shader_feature _GLITCH_ON
 					#pragma vertex vert
 					#pragma fragment frag
 
@@ -52,6 +56,8 @@ Shader "SFHologram/HologramShader"
 						float4 vertex : POSITION;
 						float3 normal : NORMAL;
 						float2 uv : TEXCOORD0;
+
+						UNITY_VERTEX_INPUT_INSTANCE_ID //XR
 					};
 
 					struct v2f
@@ -62,7 +68,7 @@ Shader "SFHologram/HologramShader"
 						float3 viewDir : TEXCOORD2;
 						float3 worldNormal : NORMAL;
 
-						UNITY_VERTEX_OUTPUT_STEREO
+						UNITY_VERTEX_OUTPUT_STEREO //XR
 					};
 
 					sampler2D _MainTex;
@@ -81,26 +87,47 @@ Shader "SFHologram/HologramShader"
 					float _GlowTiling;
 					float _GlowSpeed;
 					float _FlickerSpeed;
+					float _SpinSpeed;
+					float _BobSpeed;
+					float _BobAmount;
+
+
+					float4 RotateAroundYInDegrees(float4 vertex, float degrees)
+					{
+						float alpha = degrees * UNITY_PI / 180.0;
+						float sina, cosa;
+						sincos(alpha, sina, cosa);
+						float2x2 m = float2x2(cosa, -sina, sina, cosa);
+						return float4(mul(m, vertex.xz), vertex.yw).xzyw;
+					}
+
+					float4 Bob(float4 vertex, float amount, float speed)
+					{
+						vertex.y += sin(speed) * amount;
+						return vertex;
+					}
 
 					v2f vert(appdata v)
 					{
 						v2f o;
 
-						// Glitches
-						
-						UNITY_SETUP_INSTANCE_ID(v);
-						UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+						UNITY_SETUP_INSTANCE_ID(v); //XR
+						UNITY_INITIALIZE_OUTPUT(v2f, o); //XR
+						UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o); //XR
 
+						// Glitches
 						v.vertex.x += _GlitchIntensity * (step(0.5, sin(_Time.y * 2.0 + v.vertex.y * 1.0)) * step(0.99, sin(_Time.y * _GlitchSpeed * 0.5)));
 
-						o.vertex = UnityObjectToClipPos(v.vertex);
+						v.vertex = RotateAroundYInDegrees(v.vertex, _SpinSpeed * _Time.y);
+						v.vertex = Bob(v.vertex, _BobAmount, _BobSpeed * _Time.y);
 
+						o.vertex = UnityObjectToClipPos(v.vertex);
 						o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 						o.worldVertex = mul(unity_ObjectToWorld, v.vertex);
 						o.worldNormal = UnityObjectToWorldNormal(v.normal);
+
 						return o;
 					}
-
 
 					fixed4 frag(v2f i) : SV_Target
 					{
@@ -110,15 +137,11 @@ Shader "SFHologram/HologramShader"
 
 						// Scanlines
 						float scan = 0.0;
-						#ifdef _SCAN_ON
-							scan = step(frac(dirVertex * _ScanTiling + _Time.w * _ScanSpeed), 0.5) * 0.65;
-						#endif
+						scan = step(frac(dirVertex * _ScanTiling + _Time.w * _ScanSpeed), 0.5) * 0.65;
 
 						// Glow
 						float glow = 0.0;
-						#ifdef _GLOW_ON
-							glow = frac(dirVertex * _GlowTiling - _Time.x * _GlowSpeed);
-						#endif
+						glow = frac(dirVertex * _GlowTiling - _Time.x * _GlowSpeed);
 
 						// Flicker
 						fixed4 flicker = tex2D(_FlickerTex, _Time * _FlickerSpeed);
@@ -137,6 +160,5 @@ Shader "SFHologram/HologramShader"
 						ENDCG
 					}
 			}
-
-			CustomEditor "HologramShaderGUI"
+			Fallback "Diffuse"
 }

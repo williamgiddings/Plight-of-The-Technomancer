@@ -6,5 +6,6 @@ using UnityEngine;
 public class AIEnemyUnitParams : ScriptableObject
 {
     public float MoveSpeed;
+    public float DamageModifier = 1.0f;
     public AIEngagementParams EngagementParams;
 }

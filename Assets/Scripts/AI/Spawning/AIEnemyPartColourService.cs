@@ -6,10 +6,8 @@ using UnityEngine;
 public enum AIEnemyPartCategory
 {
     Head,
-    Back,
     Torso,
-    Legs,
-    Arms
+    Legs
 }
 
 public class AIEnemyPartConfiguration

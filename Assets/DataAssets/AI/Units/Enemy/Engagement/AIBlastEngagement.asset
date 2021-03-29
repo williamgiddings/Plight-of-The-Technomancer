@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c839590113fb5f24ba4bedb5a2c4eed7, type: 3}
   m_Name: AIBlastEngagement
   m_EditorClassIdentifier: 
-  Cooldown: 5
+  Cooldown: 4
   BarragesPerEngagement:
   - Delay: 0
     MuzzleIndex: 0
@@ -20,4 +20,3 @@ MonoBehaviour:
   - Delay: 0
     MuzzleIndex: 1
     ProjectileType: 3
-  DamagePerSecond: 10.4

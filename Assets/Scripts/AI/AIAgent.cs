@@ -7,7 +7,8 @@ public class AIAgent : Entity
 {
     [Header("Engagement")]
     public Transform[] MuzzleLocations;
-    
+    public float DamageOverride = 1.0f;
+
     protected Vector3 Destination;
     protected AIPerceptionComponent PerceptionComponent;
     [SerializeField]
@@ -36,7 +37,12 @@ public class AIAgent : Entity
     public void SetEngagementParams( AIEngagementParams EngageParams )
     {
         EngagementParams = EngageParams;
-        Engager = new AIEngager( this, EngagementParams.BarragesPerEngagement, ref MuzzleLocations );
+        Engager = new AIEngager(
+            this,
+            EngagementParams.BarragesPerEngagement,
+            ref MuzzleLocations, 
+            this as AIEnemyUnit ? DamageOverride * GameState.GetDifficulty() : DamageOverride
+    );
     }
 
     protected void RegisterEvents()
@@ -97,12 +103,12 @@ public class AIAgent : Entity
 
     protected override void OnDestroy()
     {
+        base.OnDestroy();
         for ( int ChildIndex = 0; ChildIndex < transform.childCount; ChildIndex++ )
         {
-            transform.GetChild( ChildIndex ).DOKill();
+            transform.GetChild( ChildIndex ).DOKill(true);
         }
         UnRegisterEvents();
-        base.OnDestroy();
     }
 
     public Damageable GetDamageableComponent()
@@ -128,7 +134,8 @@ public class AIAgent : Entity
     {
         if ( OnDestroyEffect )
         {
-            Instantiate( OnDestroyEffect, transform.position, Quaternion.identity );
+            GameObject Effect = CFX_SpawnSystem.GetNextObject( OnDestroyEffect );
+            Effect.transform.position = transform.position;
         }
     }
 }

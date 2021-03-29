@@ -15,8 +15,8 @@ public class Entity : MonoBehaviour
     public AIPerceptionService.Faction AllignedFaction;
     public EntityType Type;
 
-    public static event DelegateUtils.VoidDelegateEntityArg onEntityDestroyed;
-    public static event DelegateUtils.VoidDelegateEntityArg onEntityCreated;
+    public static event DelegateUtils.VoidDelegateGenericArg<Entity> onEntityDestroyed;
+    public static event DelegateUtils.VoidDelegateGenericArg<Entity> onEntityCreated;
     public GameObject OnDestroyEffect;
 
     protected Damageable DamageableComponent;

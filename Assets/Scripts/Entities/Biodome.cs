@@ -4,10 +4,21 @@ using UnityEngine;
 
 public class Biodome : Entity
 {
+    [SerializeField]
+    private GameObject LowHealthEffects;
+    [SerializeField]
+    private float LowHealthEffectThreshold;
+
     protected override void Start()
     {
         base.Start();
         DamageableComponent.OnHealthZero += OnDie;
+        DamageableComponent.OnNormalisedHealthChange += OnHealthChange;
+    }
+
+    private void OnHealthChange( float NewNormalisedHealth )
+    {
+        LowHealthEffects.SetActive( NewNormalisedHealth <= LowHealthEffectThreshold );
     }
 
     private void OnDie()
@@ -20,5 +31,6 @@ public class Biodome : Entity
     {
         base.OnDestroy();
         DamageableComponent.OnHealthZero -= OnDie;
+        DamageableComponent.OnNormalisedHealthChange -= OnHealthChange;
     }
 }

@@ -16,7 +16,17 @@ public class AIEnemyUnit : AIAgent
     public float MinAimPitch;
     public float MaxAimPitch;
 
+    [SerializeField]
+    private AIEnemyScrapDropSettings ScrapSettings;
     private Entity CacheEntityTarget;
+    private ScrapService ScrapServiceRef;
+
+    [System.Serializable]
+    private struct AIEnemyScrapDropSettings
+    {
+        public float ScrapDropRate;
+        public WeightedCollection<int> ScrapAmount;
+    }
 
     protected override void Start()
     {
@@ -25,6 +35,7 @@ public class AIEnemyUnit : AIAgent
         AppearanceComponent = GetComponent<AIEnemyAppearanceComponent>();
         PerceptionComponent.SetHeadTransform( Head.transform );
         AppearanceComponent.SetupPartColours( UnitType );
+        ScrapServiceRef = GameState.GetGameService<ScrapService>();
 
         StartCoroutine( HeadToShootingPosition() );
     }
@@ -115,7 +126,10 @@ public class AIEnemyUnit : AIAgent
             LookPos.y = 0;
             Quaternion NewRotation = Quaternion.LookRotation(LookPos);
             transform.rotation = NewRotation;
-            transform.Translate( Vector3.forward * Params.MoveSpeed * Time.deltaTime );
+
+            float AdjustedMoveSpeed = Params.MoveSpeed * GameState.GetDifficulty();
+
+            transform.Translate( Vector3.forward * AdjustedMoveSpeed * Time.deltaTime );
             UpdatePosition();
             yield return new WaitForEndOfFrame();
         }
@@ -126,6 +140,15 @@ public class AIEnemyUnit : AIAgent
     {
         base.OnDie();
         AssociatedWave.OnUnitDestroyed( this );
+        DropScrap();
         Destroy( gameObject );
+    }
+
+    private void DropScrap()
+    {
+        if ( Random.Range(0.0f, 1.0f) <= ScrapSettings.ScrapDropRate )
+        {
+            ScrapServiceRef.CreateScrapPickup( transform.position, ScrapSettings.ScrapAmount.Get( Random.Range( 0.0f, 1.0f ) ) );
+        }
     }
 }

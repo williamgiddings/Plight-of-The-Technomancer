@@ -201,6 +201,7 @@ MonoBehaviour:
   OnDestroyEffect: {fileID: 100010, guid: e0609132424a24844b1d53ad3d704fd9, type: 3}
   MuzzleLocations:
   - {fileID: 5197654944943725242}
+  DamageOverride: 1
   EngagementParams: {fileID: 0}
   UnitNickName: 
   TurretBase: {fileID: 113240871561014298}

@@ -41,7 +41,7 @@ public class AIPerceptionComponent : MonoBehaviour
     public AIPerceptionParams PerceptionParams;
 
     //Events
-    public DelegateUtils.VoidDelegateEntityArg onTargetAquired;
+    public DelegateUtils.VoidDelegateGenericArg<Entity> onTargetAquired;
     public DelegateUtils.VoidDelegateNoArgs onTargetLost;
 
 

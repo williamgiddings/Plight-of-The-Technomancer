@@ -37,6 +37,7 @@ public class Projectile
     [Header("Projectile Appearance")]
     public ProjectileAppearanceData Appearance;
     public Vector3 Scale;
+    public GameObject ImpactParticle;
    
     private float TimeUnitlImpact;
 
@@ -97,11 +98,11 @@ public struct ProjectileHitInformation
 }
 
 
-
 public class ProjectileService : GameService
 {
     public LayerMask ProjectileLayerMask;
     public List<UnitProjectileBinding> ProjectileBindings = new List<UnitProjectileBinding>();
+    public Camera FPSCamera;
 
     private Dictionary<Projectile, ProjectileHitInformation> PredeterminedProjectilePaths = new Dictionary<Projectile, ProjectileHitInformation>();
 
@@ -117,7 +118,7 @@ public class ProjectileService : GameService
         }
     }
 
-    public Projectile CreateProjectile( GameObject Owner, ProjectileTypes UnitProjectileType, Entity Target, Vector3 StartPosition  )
+    public Projectile CreateProjectile( GameObject Owner, ProjectileTypes UnitProjectileType, Entity Target, Vector3 StartPosition )
     {    
         Vector3 Direction = Target ? GetCenterMassTargetDir(StartPosition, Target) : Owner.transform.forward;
         if ( Physics.Raycast(StartPosition, Direction, out RaycastHit Hit, ProjectileLayerMask ) )
@@ -127,7 +128,9 @@ public class ProjectileService : GameService
 
             if ( ProjectileType != null )
             {
-                PredeterminedProjectilePaths.Add( ProjectileType.Create( HitInfo, StartPosition, Direction ), HitInfo );
+                Projectile NewProjectile = ProjectileType.Create( HitInfo, StartPosition, Direction );
+                PredeterminedProjectilePaths.Add( NewProjectile, HitInfo );
+                return NewProjectile;
             }
         }
         
@@ -209,6 +212,24 @@ public class ProjectileService : GameService
             {
                 HitInfo.TargetEntity.TryDealDamage( new DamageSource( ProjectileReference.DamageType, HitInfo.ProjectileOwner, ProjectileInfo.Key.ProjectileDamage, ProjectileReference.GetOrigin() ) );
             }
+        }
+
+        if ( ProjectileReference.ImpactParticle )
+        {
+            Vector2 CameraBounds = new Vector2( FPSCamera.pixelWidth, FPSCamera.pixelHeight);
+            Vector2 HitLocationScreen = FPSCamera.WorldToScreenPoint( HitInfo.HitPosition, Camera.MonoOrStereoscopicEye.Mono );
+            if (
+                HitLocationScreen.x <= CameraBounds.x &&
+                HitLocationScreen.x >= 0 &&
+                HitLocationScreen.y <= CameraBounds.y &&
+                HitLocationScreen.y >= 0
+                )
+            {
+                GameObject Effect = CFX_SpawnSystem.GetNextObject( ProjectileReference.ImpactParticle );
+                Effect.transform.position = HitInfo.HitPosition;
+                Effect.transform.up = HitInfo.HitNormal;
+            }
+            
         }
     }
 }

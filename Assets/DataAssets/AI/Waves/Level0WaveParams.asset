@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db115ff7fca27a478ea613207b7059a, type: 3}
   m_Name: Level0WaveParams
   m_EditorClassIdentifier: 
-  MaxUnitsInWave: 10
-  MinUnitsInWave: 5
+  MaxUnitsInWave: 1
+  MinUnitsInWave: 1
   NumUnitTypes: 1
   AvailibleUnits:
     Entries:

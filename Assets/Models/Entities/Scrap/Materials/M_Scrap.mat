@@ -83,6 +83,8 @@ Material:
     - _Alpha: 0.05
     - _AlphaClip: 0
     - _Blend: 0
+    - _BobAmount: 0.27
+    - _BobSpeed: 1.2
     - _Brightness: 6
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -114,6 +116,7 @@ Material:
     - _Smoothness: 0.779
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpinSpeed: 60
     - _SrcBlend: 1
     - _Surface: 0
     - _UVSec: 0

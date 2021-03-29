@@ -84,8 +84,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Alpha: 0.165
-    - _Brightness: 2.75
+    - _Alpha: 0.169
+    - _BobAmount: 0.005
+    - _BobSpeed: 1.5
+    - _Brightness: 2.9
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -119,6 +121,7 @@ Material:
     - _ScanlineTiling2: 0.05
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpinSpeed: 15
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
@@ -126,7 +129,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Direction: {r: 0, g: 1, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MainColor: {r: 0, g: 0.684, b: 0.21700664, a: 1}
-    - _RimColor: {r: 0.77962637, g: 0.7924528, b: 0.3252047, a: 1}
+    - _MainColor: {r: 0, g: 1, b: 0.05445552, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 1}
     - _ScanlineColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
