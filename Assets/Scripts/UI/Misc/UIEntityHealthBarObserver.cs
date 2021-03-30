@@ -32,7 +32,11 @@ public class UIEntityHealthBarObserver : MonoBehaviour
 
         if ( EntityReference )
         {
-            EntityReference.GetDamageableComponent().OnNormalisedHealthChange -= UpdateHealthBar;
+            Damageable DamageComponent = EntityReference.GetDamageableComponent();
+            if ( DamageComponent )
+            {
+                DamageComponent.OnNormalisedHealthChange -= UpdateHealthBar;
+            }
         }
     }
 }

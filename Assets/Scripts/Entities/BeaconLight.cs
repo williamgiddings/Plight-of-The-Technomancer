@@ -14,15 +14,17 @@ public class BeaconLight : MonoBehaviour
 
     private MeshRenderer LightMeshRenderer;
     private bool BeaconActive = false;
+    private AudioSource AudioComponenet;
     
     private void Start()
     {
+        LightMeshRenderer = GetComponent<MeshRenderer>();
+        AudioComponenet = GetComponent<AudioSource>();
         if ( GameState.TryGetGameService<AIWaveSpawnService>( out AIWaveSpawnService WaveService ) )
         {
             WaveService.OnWaveBegin += EnableBeaconLight;
             WaveService.OnWaveEnd += DisableBeaconLight;
         }
-        LightMeshRenderer = GetComponent<MeshRenderer>();
         LightMeshRenderer.material.SetColor( "_EmissionColor", Color.black );
     }
 
@@ -34,6 +36,11 @@ public class BeaconLight : MonoBehaviour
         }
         LightMeshRenderer.material.SetColor( "_EmissionColor", Color.black );
         BeaconActive = false;
+        
+        if ( AudioComponenet )
+        {
+            AudioComponenet.Stop();
+        }
     }
 
     private void EnableBeaconLight( AIWave NewWave )
@@ -44,6 +51,11 @@ public class BeaconLight : MonoBehaviour
         }
         LightMeshRenderer.material.SetColor( "_EmissionColor", StaticLightEmissionColor );
         BeaconActive = true;
+
+        if (AudioComponenet)
+        {
+            AudioComponenet.Play();
+        }
     }
 
     private void Update()

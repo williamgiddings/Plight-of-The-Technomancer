@@ -146,9 +146,18 @@ public class AIEnemyUnit : AIAgent
 
     private void DropScrap()
     {
-        if ( Random.Range(0.0f, 1.0f) <= ScrapSettings.ScrapDropRate )
+        if ( Random.Range( 0.0f, 1.0f ) <= ScrapSettings.ScrapDropRate )
         {
-            ScrapServiceRef.CreateScrapPickup( transform.position, ScrapSettings.ScrapAmount.Get( Random.Range( 0.0f, 1.0f ) ) );
+            int ScrapAmount = ScrapSettings.ScrapAmount.Get( Random.Range( 0.0f, 1.0f ) );
+            
+            if ( GameManager.GetCurrentGameMode() == GameModeType.Coop )
+            {
+                ScrapServiceRef.CreateScrapPickup( transform.position, ScrapAmount );
+            }
+            else
+            {
+                ScrapServiceRef.AddScrap( ScrapAmount );
+            }
         }
     }
 }

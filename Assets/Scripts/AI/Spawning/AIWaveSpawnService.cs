@@ -35,7 +35,7 @@ public class AIWaveSpawnService : GameService
 
     private void onGameStateFinishedInitialisation()
     {
-        StartIntermission( 10.0f );
+        StartIntermission( 30.0f );
     }
 
 #if UNITY_EDITOR
@@ -141,10 +141,10 @@ public class AIWaveSpawnService : GameService
 
     private void WaveComplete()
     {
-        if ( CurrentWaveIndex <= WaveFormations.Length - 1 )
+        if ( CurrentWaveIndex <= WaveFormations.Length - 2 )
         {
             OnWaveEnd( CurrentWave );
-            StartIntermission( 40.0f );
+            StartIntermission( 30.0f );
         }
         else
         {

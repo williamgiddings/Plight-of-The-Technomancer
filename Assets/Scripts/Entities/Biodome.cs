@@ -9,6 +9,8 @@ public class Biodome : Entity
     [SerializeField]
     private float LowHealthEffectThreshold;
 
+    public static event DelegateUtils.VoidDelegateNoArgs OnHealthLow;
+
     protected override void Start()
     {
         base.Start();
@@ -18,7 +20,12 @@ public class Biodome : Entity
 
     private void OnHealthChange( float NewNormalisedHealth )
     {
-        LowHealthEffects.SetActive( NewNormalisedHealth <= LowHealthEffectThreshold );
+        if ( NewNormalisedHealth <= LowHealthEffectThreshold )
+        {
+            OnHealthLow();
+            LowHealthEffects.SetActive( true );
+        }
+        
     }
 
     private void OnDie()

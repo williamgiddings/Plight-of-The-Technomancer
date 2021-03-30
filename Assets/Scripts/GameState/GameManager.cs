@@ -25,6 +25,9 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     private GameResult CurrentGameResult;
 
+    public static event DelegateUtils.VoidDelegateNoArgs OnMissionSuccess;
+    public static event DelegateUtils.VoidDelegateNoArgs OnMissionFail;
+
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoad;
@@ -60,6 +63,24 @@ public class GameManager : Singleton<GameManager>
 
     public static void EndGame( GameResult Result )
     {
+        Instance.StartCoroutine( Instance.EndGameSequence( Result ) );
+    }
+
+    private IEnumerator EndGameSequence( GameResult Result )
+    {     
+        switch( Result )
+        {
+            case GameResult.Success:
+                OnMissionSuccess();
+                break;
+            case GameResult.Fail:
+                OnMissionFail();
+                break;
+            case GameResult.Quit:
+                OnMissionFail();
+                break;
+        }
+        yield return new WaitForSeconds( 9.0f ); // Wait for VO
         Instance.CurrentGameResult = Result;
         SceneManager.LoadScene( 2 );
     }

@@ -178,13 +178,14 @@ public class ProjectileService : GameService
                 ProjectileDataSet.Add( ActiveProjectile.Key.DamageType, NewData );
             }
         }
-        CleanUpProjectiles(RemoveQueue);
-        RenderProjectiles( ProjectileDataSet ); 
+        CleanUpProjectiles(RemoveQueue);    
+        RenderProjectiles( ProjectileDataSet );
     }
 
     private void CleanUpProjectiles( List<Projectile> InRemoveQueue )
     {
         InRemoveQueue.ForEach( ProjectileToRemove => RemoveProjectile( ProjectileToRemove ) );
+        InRemoveQueue.Clear();
     }
 
     void RenderProjectiles( Dictionary<ProjectileTypes, ProjectileMatrixData> RenderableProjectiles )
@@ -196,7 +197,10 @@ public class ProjectileService : GameService
                 Projectile.ProjectileAppearanceData Appearance = ProjectileTypes.Value.ProjectileCollection[0].Appearance;
                 Graphics.DrawMeshInstanced( Appearance.ProjectileMesh, 0, Appearance.ProjectileMaterial, ProjectileTypes.Value.MatrixCollection, null, UnityEngine.Rendering.ShadowCastingMode.Off, false, 10 );
             }
+            ProjectileTypes.Value.MatrixCollection.Clear();
+            ProjectileTypes.Value.ProjectileCollection.Clear();
         }
+        RenderableProjectiles.Clear();
     }
 
     void ProcessHit( KeyValuePair<Projectile, ProjectileHitInformation> ProjectileInfo )

@@ -11,6 +11,16 @@ public class Player : Entity
         DamageableComponent.OnHealthZero += OnDie;
     }
 
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            OnDie();
+        }
+    }
+#endif
+
     private void OnDie()
     {
         Debug.Log("Player Died");
