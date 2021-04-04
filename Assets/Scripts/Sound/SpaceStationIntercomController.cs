@@ -21,6 +21,7 @@ public class SpaceStationIntercomController : MonoBehaviour
         public AudioClip IntroClip;
         public AudioClip BioDomeCritical;
         public AudioClip ScrapReceived;
+        public AudioClip TimerBeep;
     }
     
     private void Start()
@@ -46,6 +47,7 @@ public class SpaceStationIntercomController : MonoBehaviour
         {
             WaveSpawnService.OnWaveBegin += PlayWaveBeginClip;
             WaveSpawnService.OnWaveEnd += PlayWaveEndClip;
+            WaveSpawnService.OnIntermissionUpdate += PlayTimerBeepClip;
         }
     }
 
@@ -60,8 +62,16 @@ public class SpaceStationIntercomController : MonoBehaviour
         {
             WaveSpawnService.OnWaveBegin -= PlayWaveBeginClip;
             WaveSpawnService.OnWaveEnd -= PlayWaveEndClip;
+            WaveSpawnService.OnIntermissionUpdate -= PlayTimerBeepClip;
         }
     }
+
+
+    private void PlayTimerBeepClip( float Payload )
+    {
+        AudioComponent.PlayOneShot( AudioClips.TimerBeep );
+    }
+
     private void PlayBioDomeCriticalClip()
     {
         AudioComponent.PlayOneShot( AudioClips.BioDomeCritical );

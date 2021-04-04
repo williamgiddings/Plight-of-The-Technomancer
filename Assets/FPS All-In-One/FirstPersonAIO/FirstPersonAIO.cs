@@ -202,7 +202,7 @@ public class BETA_SETTINGS{
     [Space(5)]
     public BETA_SETTINGS betaSettings = new BETA_SETTINGS();
      */
-    
+
     #endregion
 
     #endregion
@@ -230,9 +230,19 @@ public class BETA_SETTINGS{
         #endregion
 
         #region BETA_SETTINGS - Awake
-    
-#endregion
 
+        #endregion
+
+        #region Third-Party Events
+        Player.OnPlayerDied += OnPlayerDied;
+        #endregion
+
+    }
+
+    private void OnPlayerDied()
+    {
+        playerCanMove = false;
+        enableCameraMovement = false;
     }
 
     private void Start()
@@ -641,6 +651,11 @@ public class BETA_SETTINGS{
             yield return null;
         }
         playerCamera.transform.localPosition = cameraStartingPosition;
+    }
+
+    private void OnDestroy()
+    {
+        Player.OnPlayerDied += OnPlayerDied;
     }
 }
 

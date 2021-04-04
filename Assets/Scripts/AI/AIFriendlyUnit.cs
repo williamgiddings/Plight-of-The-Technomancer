@@ -10,6 +10,9 @@ public class AIFriendlyUnit : AIAgent
     public static event AIDelegates.FriendlyUnitDelegate onFriendlyUnitDestroyed;
     public static event AIDelegates.FriendlyUnitDelegate onFriendlyUnitSpawned;
 
+    [Header("Effects")]
+    public GameObject OnSpawnParticleEffect;
+
     [Header("Aiming Visual")]
     public Transform TurretBase;
     public Transform TurretGun;
@@ -25,6 +28,12 @@ public class AIFriendlyUnit : AIAgent
         base.Start();
         onFriendlyUnitSpawned( this );
         PerceptionComponent.SetHeadTransform( TurretGun.transform );
+        
+        if ( OnSpawnParticleEffect )
+        {
+            GameObject Effect = CFX_SpawnSystem.GetNextObject( OnSpawnParticleEffect );
+            Effect.transform.position = transform.position;
+        }
     }
 
     public AIFriendlyUnitData GetUnitData()

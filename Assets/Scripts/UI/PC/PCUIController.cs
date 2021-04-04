@@ -36,6 +36,8 @@ public class PCUIPopup : IDisposable
 
 public class PCUIController : MonoBehaviour
 {
+    public Camera UICamera;
+    
     [Header("Waves")]
     public DynamicUIElement<TextMeshProUGUI> WaveText;
     public DynamicUIElement<TextMeshProUGUI> IntermissionText;
@@ -67,6 +69,7 @@ public class PCUIController : MonoBehaviour
         ScrapService.OnScrapAdded += OnScrapAdded;
         AIFriendlyUnit.onFriendlyUnitSpawned += OnFriendlyUnitSpawned;
         AIFriendlyUnit.onFriendlyUnitDestroyed += OnFriendlyUnitDestroyed;
+        GameManager.OnGameStartedEnding += OnGameOver;
         if ( GameState.TryGetGameService<AIWaveSpawnService>( out AIWaveSpawnService WaveService ) )
         {
             WaveService.OnWaveBegin += WaveServiceOnWaveBegin;
@@ -74,6 +77,11 @@ public class PCUIController : MonoBehaviour
             WaveService.OnIntermissionStart += WaveServiceOnIntermissionStart;
             WaveService.OnIntermissionUpdate += WaveServiceOnIntermissionUpdate;
         }
+    }
+
+    private void OnGameOver()
+    {
+        UICamera.enabled = false;
     }
 
     private void OnFriendlyUnitDestroyed( AIFriendlyUnit SpawnedUnit )
@@ -98,6 +106,7 @@ public class PCUIController : MonoBehaviour
         ScrapService.OnScrapAdded -= OnScrapAdded;
         AIFriendlyUnit.onFriendlyUnitSpawned -= OnFriendlyUnitSpawned;
         AIFriendlyUnit.onFriendlyUnitDestroyed -= OnFriendlyUnitDestroyed;
+        GameManager.OnGameStartedEnding -= OnGameOver;
         if ( GameState.TryGetGameService<AIWaveSpawnService>( out AIWaveSpawnService WaveService ) )
         {
             WaveService.OnWaveBegin -= WaveServiceOnWaveBegin;

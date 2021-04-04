@@ -204,6 +204,7 @@ MonoBehaviour:
   DamageOverride: 1
   EngagementParams: {fileID: 0}
   UnitNickName: 
+  OnSpawnParticleEffect: {fileID: 100006, guid: a49596ebf788acd4ab1281bffea444b1, type: 3}
   TurretBase: {fileID: 113240871561014298}
   TurretGun: {fileID: 59171653064251307}
   AimingLights: {fileID: 6821483517015559118}
@@ -369,7 +370,7 @@ GameObject:
   - component: {fileID: 1738966010692908720}
   - component: {fileID: 7776719721778542970}
   - component: {fileID: 6821483517015559118}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SensorLights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -523,6 +524,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 846a532077160e74293181bd86219666, type: 3}
       propertyPath: m_Name
       value: ForceField
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 846a532077160e74293181bd86219666, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 846a532077160e74293181bd86219666, type: 3}

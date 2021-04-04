@@ -60,7 +60,7 @@ public class Entity : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        onEntityDestroyed( this );
+        if ( onEntityDestroyed != null) onEntityDestroyed( this );
     }
 
     public void Target()

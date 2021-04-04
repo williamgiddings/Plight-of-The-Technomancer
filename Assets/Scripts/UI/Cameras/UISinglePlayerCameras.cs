@@ -31,17 +31,8 @@ public class UISinglePlayerCameras : MonoBehaviour
 
             foreach( RenderTextureBinding Binding in Bindings )
             {
-                if ( Binding.UIImageRef.texture )
-                {
-                    Destroy( Binding.UIImageRef.texture );
-                }
-                RenderTexture Tex = CCTVService.GetTextureForDirection( Binding.Direction );
-                Texture2D NewTex = new Texture2D(256, 256, TextureFormat.RGB24, false, true);
-                RenderTexture.active = Tex;
-                NewTex.ReadPixels( new Rect( 0, 0, Tex.width, Tex.height ), 0, 0 );
-                NewTex.Apply();
-                RenderTexture.active = null;
-                Tex.Release();
+                RenderTexture NewTex = new RenderTexture( 256, 256, 0, UnityEngine.Experimental.Rendering.DefaultFormat.HDR );
+                Graphics.Blit( CCTVService.GetTextureForDirection( Binding.Direction ), NewTex );
                 Binding.UIImageRef.texture = NewTex;
             }
         }

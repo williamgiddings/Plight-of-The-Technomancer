@@ -10,6 +10,7 @@ public class Biodome : Entity
     private float LowHealthEffectThreshold;
 
     public static event DelegateUtils.VoidDelegateNoArgs OnHealthLow;
+    public static event DelegateUtils.VoidDelegateNoArgs OnBiodomeDestroyed;
 
     protected override void Start()
     {
@@ -22,15 +23,15 @@ public class Biodome : Entity
     {
         if ( NewNormalisedHealth <= LowHealthEffectThreshold )
         {
-            OnHealthLow();
+            if ( OnHealthLow != null ) OnHealthLow();
             LowHealthEffects.SetActive( true );
-        }
-        
+        }    
     }
 
     private void OnDie()
     {
         Debug.Log( "Biodome Destroyed" );
+        if ( OnBiodomeDestroyed != null ) OnBiodomeDestroyed();
         GameManager.EndGame( GameResult.Fail );
     }
 
@@ -40,4 +41,14 @@ public class Biodome : Entity
         DamageableComponent.OnHealthZero -= OnDie;
         DamageableComponent.OnNormalisedHealthChange -= OnHealthChange;
     }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if ( Input.GetKeyDown( KeyCode.F4 ) )
+        {
+            OnDie();
+        }
+    }
+#endif
 }

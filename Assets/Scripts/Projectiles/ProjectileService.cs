@@ -220,20 +220,20 @@ public class ProjectileService : GameService
 
         if ( ProjectileReference.ImpactParticle )
         {
-            Vector2 CameraBounds = new Vector2( FPSCamera.pixelWidth, FPSCamera.pixelHeight);
-            Vector2 HitLocationScreen = FPSCamera.WorldToScreenPoint( HitInfo.HitPosition, Camera.MonoOrStereoscopicEye.Mono );
-            if (
-                HitLocationScreen.x <= CameraBounds.x &&
-                HitLocationScreen.x >= 0 &&
-                HitLocationScreen.y <= CameraBounds.y &&
-                HitLocationScreen.y >= 0
-                )
+            if ( IsProjectileImpactVisible( HitInfo.HitPosition ) )
             {
                 GameObject Effect = CFX_SpawnSystem.GetNextObject( ProjectileReference.ImpactParticle );
                 Effect.transform.position = HitInfo.HitPosition;
                 Effect.transform.up = HitInfo.HitNormal;
             }
-            
         }
+    }
+
+    private bool IsProjectileImpactVisible( Vector3 ImpactPosition )
+    {
+        Vector3 BoundsSize = new Vector3(1,1,1);
+        Bounds HitBounds = new Bounds(ImpactPosition, BoundsSize);
+        Plane[] Planes = GeometryUtility.CalculateFrustumPlanes(FPSCamera);
+        return GeometryUtility.TestPlanesAABB( Planes, HitBounds );
     }
 }

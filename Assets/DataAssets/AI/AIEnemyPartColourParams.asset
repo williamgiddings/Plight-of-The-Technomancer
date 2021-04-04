@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NumPartRecolours:
     Entries:
-    - AccumulatedWeight: 0.5
+    - AccumulatedWeight: 0.65
       Object: 2
       Weight: 0.65
-    - AccumulatedWeight: 0.8
+    - AccumulatedWeight: 0.9
       Object: 3
       Weight: 0.25
   AvailableColours:
@@ -27,7 +27,7 @@ MonoBehaviour:
     ColourName: red
   - Colour: {r: 0.6886792, g: 0.44561598, b: 0, a: 0}
     ColourName: orange
-  - Colour: {r: 0.5019608, g: 0, b: 0.5019608, a: 0}
+  - Colour: {r: 0.40954238, g: 0, b: 0.8584906, a: 0}
     ColourName: purple
-  - Colour: {r: 0.5019608, g: 0.5019608, b: 0, a: 0}
+  - Colour: {r: 0.31894222, g: 0.764151, b: 0, a: 0}
     ColourName: green

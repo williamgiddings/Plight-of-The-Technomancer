@@ -35,6 +35,7 @@ public class VRCanvas : XRSimpleInteractable
         }
     }
 
+#if UNITY_EDITOR
     [MenuItem( "GameObject/UI/VR Canvas" )]
     static void CreateNew( MenuCommand InMenuCommand )
     {
@@ -43,6 +44,7 @@ public class VRCanvas : XRSimpleInteractable
         Undo.RegisterCreatedObjectUndo( Canvas, "Create " + Canvas.name );
         Selection.activeObject = Canvas;
     }
+#endif
 
     private void Start()
     {

@@ -105,7 +105,6 @@ public class GameState : MonoBehaviour
         return false;
     }
 
-
     [ExecuteInEditMode]
     public static bool TryGetGameServiceEditor<Service>( out Service OutService ) where Service : GameService
     {

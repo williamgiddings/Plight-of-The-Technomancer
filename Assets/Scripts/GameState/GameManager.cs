@@ -27,6 +27,7 @@ public class GameManager : Singleton<GameManager>
 
     public static event DelegateUtils.VoidDelegateNoArgs OnMissionSuccess;
     public static event DelegateUtils.VoidDelegateNoArgs OnMissionFail;
+    public static event DelegateUtils.VoidDelegateNoArgs OnGameStartedEnding;
 
     private void Awake()
     {
@@ -63,6 +64,7 @@ public class GameManager : Singleton<GameManager>
 
     public static void EndGame( GameResult Result )
     {
+        if( OnGameStartedEnding != null ) OnGameStartedEnding();
         Instance.StartCoroutine( Instance.EndGameSequence( Result ) );
     }
 

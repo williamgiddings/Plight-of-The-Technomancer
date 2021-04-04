@@ -20,6 +20,7 @@ public class AIEnemyUnit : AIAgent
     private AIEnemyScrapDropSettings ScrapSettings;
     private Entity CacheEntityTarget;
     private ScrapService ScrapServiceRef;
+    private AIWaveSpawnService WaveSpawnService;
 
     [System.Serializable]
     private struct AIEnemyScrapDropSettings
@@ -36,6 +37,7 @@ public class AIEnemyUnit : AIAgent
         PerceptionComponent.SetHeadTransform( Head.transform );
         AppearanceComponent.SetupPartColours( UnitType );
         ScrapServiceRef = GameState.GetGameService<ScrapService>();
+        WaveSpawnService = GameState.GetGameService<AIWaveSpawnService>();
 
         StartCoroutine( HeadToShootingPosition() );
     }
@@ -145,19 +147,22 @@ public class AIEnemyUnit : AIAgent
     }
 
     private void DropScrap()
-    {
-        if ( Random.Range( 0.0f, 1.0f ) <= ScrapSettings.ScrapDropRate )
+    {   
+        if ( !WaveSpawnService.IsLastWave() )
         {
-            int ScrapAmount = ScrapSettings.ScrapAmount.Get( Random.Range( 0.0f, 1.0f ) );
-            
-            if ( GameManager.GetCurrentGameMode() == GameModeType.Coop )
+            if ( Random.Range( 0.0f, 1.0f ) <= ScrapSettings.ScrapDropRate )
             {
-                ScrapServiceRef.CreateScrapPickup( transform.position, ScrapAmount );
+                int ScrapAmount = ScrapSettings.ScrapAmount.Get( Random.Range( 0.0f, 1.0f ) );
+
+                if ( GameManager.GetCurrentGameMode() == GameModeType.Coop )
+                {
+                    ScrapServiceRef.CreateScrapPickup( transform.position, ScrapAmount );
+                }
+                else
+                {
+                    ScrapServiceRef.AddScrap( ScrapAmount );
+                }
             }
-            else
-            {
-                ScrapServiceRef.AddScrap( ScrapAmount );
-            }
-        }
+        }       
     }
 }

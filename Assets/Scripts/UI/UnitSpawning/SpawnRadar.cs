@@ -8,6 +8,7 @@ public class SpawnRadar : MonoBehaviour
 {
     public SpawnerDisplayReticle Reticle;
     public TextMeshProUGUI PositionGUI;
+    public Camera EventCamera;
     
     private RectTransform CachedTransform;
     private Canvas CachedCanvas;
@@ -25,36 +26,46 @@ public class SpawnRadar : MonoBehaviour
 
     public void StartMovingReticle( BaseEventData Event )
     {
-        if ( !TargetNormalisedPosition )
+        PointerEventData PointerEvent = Event as PointerEventData;
+        if ( PointerEvent.enterEventCamera == EventCamera )
         {
-            Reticle.StartMoving( Event as PointerEventData );
+            if ( !TargetNormalisedPosition )
+            {
+                Reticle.StartMoving( PointerEvent );
+            }
         }
     }
 
     public void StopMovingReticle( BaseEventData Event )
     {
-        if ( !TargetNormalisedPosition )
-        { 
-            Reticle.StopMoving();
-        }    
+        PointerEventData PointerEvent = Event as PointerEventData;
+        if ( PointerEvent.enterEventCamera == EventCamera )
+        {
+            if ( !TargetNormalisedPosition )
+            {
+                Reticle.StopMoving();
+            }
+        }  
     }
 
     public void OnSelect( BaseEventData Event )
     {
-        if (!TargetNormalisedPosition )
+        PointerEventData PointerEvent = Event as PointerEventData;
+        if ( PointerEvent.enterEventCamera == EventCamera )
         {
-            Vector2 Position = Reticle.Select();
-            TargetNormalisedPosition = new Vector2( Mathf.Abs(Position.x / CachedTransform.rect.width), 1.0f-Mathf.Abs(Position.y / CachedTransform.rect.height) );
-            Debug.Log( string.Format( "Norm: ", TargetNormalisedPosition.ToString() ) );
-            Debug.Log( string.Format( "Raw: ", Position.ToString() ) );
-            Reticle.PauseMovement();
-            onSpawnCoordSelected( TargetNormalisedPosition );
-        }
-        else
-        {
-            ResetSelection();
-        }
-        UpdateCoordText();
+            if ( !TargetNormalisedPosition )
+            {
+                Vector2 Position = Reticle.Select();
+                TargetNormalisedPosition = new Vector2( Mathf.Abs( Position.x / CachedTransform.rect.width ), 1.0f - Mathf.Abs( Position.y / CachedTransform.rect.height ) );
+                Reticle.PauseMovement();
+                onSpawnCoordSelected( TargetNormalisedPosition );
+            }
+            else
+            {
+                ResetSelection();
+            }
+            UpdateCoordText();
+        } 
     }
 
     public void ResetSelection()

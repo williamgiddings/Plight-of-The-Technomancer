@@ -121,7 +121,7 @@ MonoBehaviour:
   MuzzleLocations:
   - {fileID: 2672720931490631533}
   - {fileID: 278039142097219179}
-  DamageOverride: 1
+  DamageOverride: 0
   EngagementParams: {fileID: 0}
   Head: {fileID: 5116882644916637623}
   MinAimPitch: -65
@@ -132,10 +132,13 @@ MonoBehaviour:
       Entries:
       - AccumulatedWeight: 0
         Object: 1
-        Weight: 0.75
+        Weight: 0.5
       - AccumulatedWeight: 0
         Object: 2
-        Weight: 0.25
+        Weight: 0.3
+      - AccumulatedWeight: 0
+        Object: 3
+        Weight: 0.2
 --- !u!54 &4650081904082814711
 Rigidbody:
   m_ObjectHideFlags: 0

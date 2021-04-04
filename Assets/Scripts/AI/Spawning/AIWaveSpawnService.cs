@@ -29,13 +29,14 @@ public class AIWaveSpawnService : GameService
         base.Begin();
         SpawnService = GameState.GetGameService<AISpawnService>();
         SurfaceProjectionService = GameState.GetGameService<AISurfaceProjectionService>();
-        GameState.onGameStateFinishedInitialisation += onGameStateFinishedInitialisation;
+        Tutorial.onTutorialFinished += TutorialFinished;
         CurrentWaveIndex = -1;
     }
 
-    private void onGameStateFinishedInitialisation()
+    private void TutorialFinished()
     {
-        StartIntermission( 30.0f );
+        Tutorial.onTutorialFinished -= TutorialFinished;
+        StartIntermission( 15.0f );
     }
 
 #if UNITY_EDITOR
@@ -93,6 +94,10 @@ public class AIWaveSpawnService : GameService
         return new Vector3( x, Height, z );
     }
 
+    public bool IsLastWave()
+    {
+        return CurrentWaveIndex == WaveFormations.Length - 1;
+    }
 
     private List<AIEnemyUnitTypes> GetNUnitTypes( int N )
     {
@@ -141,7 +146,7 @@ public class AIWaveSpawnService : GameService
 
     private void WaveComplete()
     {
-        if ( CurrentWaveIndex <= WaveFormations.Length - 2 )
+        if ( !IsLastWave() )
         {
             OnWaveEnd( CurrentWave );
             StartIntermission( 30.0f );
@@ -166,6 +171,6 @@ public class AIWaveSpawnService : GameService
         {
             CurrentWave.onComplete -= WaveComplete;
         }
-        GameState.onGameStateFinishedInitialisation -= onGameStateFinishedInitialisation;
+        Tutorial.onTutorialFinished -= TutorialFinished;
     }
 }
