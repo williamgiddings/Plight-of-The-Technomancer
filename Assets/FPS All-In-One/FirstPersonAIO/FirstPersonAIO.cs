@@ -233,16 +233,12 @@ public class BETA_SETTINGS{
 
         #endregion
 
-        #region Third-Party Events
-        Player.OnPlayerDied += OnPlayerDied;
-        #endregion
-
     }
 
-    private void OnPlayerDied()
+    private void ChangeControlMode( bool State )
     {
-        playerCanMove = false;
-        enableCameraMovement = false;
+        playerCanMove = State;
+        enableCameraMovement = State;
     }
 
     private void Start()
@@ -283,6 +279,10 @@ public class BETA_SETTINGS{
 
         #region BETA_SETTINGS - Start
         fOVKick.fovStart = playerCamera.GetComponent<Camera>().fieldOfView;
+        #endregion
+
+        #region William Giddings
+        Player.OnPlayerControlStateChanged += ChangeControlMode;
         #endregion
     }
 
@@ -655,7 +655,7 @@ public class BETA_SETTINGS{
 
     private void OnDestroy()
     {
-        Player.OnPlayerDied += OnPlayerDied;
+        Player.OnPlayerControlStateChanged -= ChangeControlMode;
     }
 }
 

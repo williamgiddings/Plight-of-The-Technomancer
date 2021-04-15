@@ -29,13 +29,12 @@ public class AIWaveSpawnService : GameService
         base.Begin();
         SpawnService = GameState.GetGameService<AISpawnService>();
         SurfaceProjectionService = GameState.GetGameService<AISurfaceProjectionService>();
-        Tutorial.onTutorialFinished += TutorialFinished;
+        TutorialService.onTutorialFinished += TutorialFinished;
         CurrentWaveIndex = -1;
     }
 
     private void TutorialFinished()
     {
-        Tutorial.onTutorialFinished -= TutorialFinished;
         StartIntermission( 15.0f );
     }
 
@@ -171,6 +170,6 @@ public class AIWaveSpawnService : GameService
         {
             CurrentWave.onComplete -= WaveComplete;
         }
-        Tutorial.onTutorialFinished -= TutorialFinished;
+        TutorialService.onTutorialFinished -= TutorialFinished;
     }
 }

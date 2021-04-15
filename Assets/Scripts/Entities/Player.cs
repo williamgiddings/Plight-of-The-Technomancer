@@ -12,15 +12,31 @@ public class Player : Entity
     private Volume PostProcessVolume;
     [SerializeField]
     private Animator AnimationController;
+    private bool HasControl;
 
     public static event DelegateUtils.VoidDelegateNoArgs OnPlayerDied;
+    public static event DelegateUtils.VoidDelegateGenericArg<bool> OnPlayerControlStateChanged;
+
+    private void EnableMovement( bool State )
+    {
+        HasControl = State;
+        Cursor.lockState = State ? CursorLockMode.Locked : CursorLockMode.Confined;
+        OnPlayerControlStateChanged( State );
+    }
 
     protected override void Start()
     {
         base.Start();
         DamageableComponent.OnHealthZero += OnDie;
         Biodome.OnBiodomeDestroyed += OnBioDomeDestroyedEffects;
+        TutorialService.onTutorialFinished += TutorialFinished;
         AnimationController.enabled = false;
+        EnableMovement( false );
+    }
+
+    private void TutorialFinished()
+    {
+        EnableMovement( true );
     }
 
 #if UNITY_EDITOR
@@ -37,6 +53,7 @@ public class Player : Entity
     {
         OnDieEffects();
         if ( OnPlayerDied != null ) OnPlayerDied();
+        EnableMovement( false );
         GameManager.EndGame( GameResult.Fail );
     }
 
@@ -53,6 +70,7 @@ public class Player : Entity
             DamageableComponent.OnHealthZero -= OnDie;
         }
         Biodome.OnBiodomeDestroyed -= OnBioDomeDestroyedEffects;
+        TutorialService.onTutorialFinished -= TutorialFinished;
     }
 
     private void OnDieEffects()

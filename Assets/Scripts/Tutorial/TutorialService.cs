@@ -2,14 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tutorial : MonoBehaviour
+public class TutorialService : GameService
 {
     public static event DelegateUtils.VoidDelegateNoArgs onTutorialFinished;
+    public int ActiveTutorials = 0;
 
-    public void FinishedTutorial()
+    public void Complete()
+    {
+        if ( --ActiveTutorials == 0 )
+        {
+            FinishedTutorial();
+        }
+    }
+
+    private void FinishedTutorial()
     {
         if ( onTutorialFinished != null ) onTutorialFinished();
-        gameObject.SetActive( false );
     }
 
 #if UNITY_EDITOR
@@ -21,4 +29,10 @@ public class Tutorial : MonoBehaviour
         }
     }
 #endif
+
+    protected override void Begin()
+    {
+        base.Begin();
+        ActiveTutorials = FindObjectsOfType<TutorialInterfacer>( false ).Length;
+    }
 }

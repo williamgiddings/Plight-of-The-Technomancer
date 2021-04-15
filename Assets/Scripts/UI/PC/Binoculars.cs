@@ -28,12 +28,20 @@ public class Binoculars : MonoBehaviour
     private LensDistortion LensDistortionEffect;
     private Vignette VignetteEffect;
 
+    private bool HasControl;
+
     private void Start()
     {
         CameraRef = GetComponent<Camera>();
         PostFX = GetComponent<Volume>();
         MaximumFOV = CameraRef.fieldOfView;
+        Player.OnPlayerControlStateChanged += EnableControls;
         InitPostFX();
+    }
+
+    private void EnableControls( bool Payload )
+    {
+        HasControl = Payload;
     }
 
     private void InitPostFX()
@@ -44,17 +52,20 @@ public class Binoculars : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if ( HasControl )
         {
-            EnterBinoculars();
-        }
-        else if ( Input.GetKeyUp( KeyCode.Mouse0 ) )
-        {
-            ExitBinoculars();
-        }
-        if ( InBinoculars )
-        {
-            CompassUI.uvRect = new Rect( DefaultCompassUVx + ( transform.root.localEulerAngles.y / 360f ), 0, 1, 1 );
+            if ( Input.GetKeyDown( KeyCode.Mouse0 ) )
+            {
+                EnterBinoculars();
+            }
+            else if ( Input.GetKeyUp( KeyCode.Mouse0 ) )
+            {
+                ExitBinoculars();
+            }
+            if ( InBinoculars )
+            {
+                CompassUI.uvRect = new Rect( DefaultCompassUVx + ( transform.root.localEulerAngles.y / 360f ), 0, 1, 1 );
+            }
         }
     }
 
