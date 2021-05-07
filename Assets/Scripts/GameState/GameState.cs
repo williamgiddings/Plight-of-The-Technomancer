@@ -56,7 +56,7 @@ public class GameState : MonoBehaviour
     private IEnumerator FinishInitialization()
     {
         yield return new WaitForEndOfFrame();
-        onGameStateFinishedInitialisation();
+        if ( onGameStateFinishedInitialisation != null) onGameStateFinishedInitialisation();
     }
 
     public static Service GetGameService<Service>() where Service : GameService

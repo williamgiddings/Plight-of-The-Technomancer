@@ -20,7 +20,7 @@ public class Player : Entity
     private void EnableMovement( bool State )
     {
         HasControl = State;
-        Cursor.lockState = State ? CursorLockMode.Locked : CursorLockMode.Confined;
+        Cursor.lockState = State ? CursorLockMode.Locked : CursorLockMode.None;
         OnPlayerControlStateChanged( State );
     }
 

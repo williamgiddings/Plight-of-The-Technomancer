@@ -222,9 +222,9 @@ MonoBehaviour:
     MaterialReference: {fileID: 2100000, guid: 1c660c5ffd6a1cc47b61fb4320ff2d6f, type: 2}
   AlbedoBoostGameModeBindings:
   - Mode: 0
-    AlbedoBoost: 3.5
+    AlbedoBoost: 4.5
   - Mode: 1
-    AlbedoBoost: 2
+    AlbedoBoost: 3
 --- !u!64 &9003621585807086412
 MeshCollider:
   m_ObjectHideFlags: 0

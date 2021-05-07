@@ -37,7 +37,7 @@ public class SpaceStationIntercomController : MonoBehaviour
 
     private void RegisterAudioEvents()
     {
-        GameState.onGameStateFinishedInitialisation += PlayIntroClip;
+        TutorialService.onTutorialFinished += PlayIntroClip;
         AIFriendlyUnit.onFriendlyUnitDestroyed += PlayFriendlyUnitDestroyedClip;
         GameManager.OnMissionSuccess += PlayMissionSuccessClip;
         GameManager.OnMissionFail += PlayMissionFailClip;
@@ -53,7 +53,7 @@ public class SpaceStationIntercomController : MonoBehaviour
 
     private void UnRegisterAudioEvents()
     {
-        GameState.onGameStateFinishedInitialisation -= PlayIntroClip;
+        TutorialService.onTutorialFinished -= PlayIntroClip;
         AIFriendlyUnit.onFriendlyUnitDestroyed -= PlayFriendlyUnitDestroyedClip;
         GameManager.OnMissionSuccess -= PlayMissionSuccessClip;
         GameManager.OnMissionFail -= PlayMissionFailClip;

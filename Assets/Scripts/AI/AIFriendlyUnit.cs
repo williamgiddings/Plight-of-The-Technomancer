@@ -90,6 +90,7 @@ public class AIFriendlyUnit : AIAgent
     {
         base.OnDie();
         onFriendlyUnitDestroyed( this );
+        Destroy( gameObject );
     }
 
     protected override void LookAtTarget()

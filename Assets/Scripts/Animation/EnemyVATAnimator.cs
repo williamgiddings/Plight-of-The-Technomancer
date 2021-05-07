@@ -36,7 +36,7 @@ public class EnemyVATAnimator : MonoBehaviour
         Attacking = 2
     }
 
-    private void Awake()
+    private void Start()
     {
         List< State< EnemyAnimState > > StateList = new List< State< EnemyAnimState > >();
         StateList.Add( new State<EnemyAnimState>( EnemyAnimState.Idle, EnterIdle, null, null ) );

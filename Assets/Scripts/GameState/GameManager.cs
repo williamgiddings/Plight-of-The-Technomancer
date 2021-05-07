@@ -32,11 +32,13 @@ public class GameManager : Singleton<GameManager>
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoad;
+        Display.displays[1].Activate();
+        Display.displays[2].Activate();
     }
 
     private void UpdateGameModeToggles()
     {
-        foreach ( GameModeToggleable Toggleable in FindObjectsOfType<GameModeToggleable>() )
+        foreach ( GameModeToggleable Toggleable in FindObjectsOfType<GameModeToggleable>(true) )
         {
             Toggleable.gameObject.SetActive( Toggleable.GetGameModeToggle() == CurrentGameMode );
         }

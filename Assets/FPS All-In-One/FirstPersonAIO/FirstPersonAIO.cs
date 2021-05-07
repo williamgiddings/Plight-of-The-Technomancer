@@ -233,6 +233,10 @@ public class BETA_SETTINGS{
 
         #endregion
 
+        #region William Giddings
+        Player.OnPlayerControlStateChanged += ChangeControlMode;
+        #endregion
+
     }
 
     private void ChangeControlMode( bool State )
@@ -262,7 +266,7 @@ public class BETA_SETTINGS{
             quic.transform.position = Vector3.zero;
         }
         cameraStartingPosition = playerCamera.localPosition;
-        if(lockAndHideCursor) { Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false; }
+        //if(lockAndHideCursor) { Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false; }
         #endregion
 
         #region Movement Settings - Start
@@ -279,10 +283,6 @@ public class BETA_SETTINGS{
 
         #region BETA_SETTINGS - Start
         fOVKick.fovStart = playerCamera.GetComponent<Camera>().fieldOfView;
-        #endregion
-
-        #region William Giddings
-        Player.OnPlayerControlStateChanged += ChangeControlMode;
         #endregion
     }
 
